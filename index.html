@@ -1,138 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nexus Logo Store | Premium Purple</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus Store | New Year</title>
 
-    <!-- Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 
-    <style>
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background:
-                radial-gradient(circle at 15% 25%, rgba(198, 120, 255, 0.55), transparent 45%),
-                radial-gradient(circle at 80% 35%, rgba(150, 80, 230, 0.6), transparent 45%),
-                radial-gradient(circle at 50% 75%, rgba(120, 60, 210, 0.6), transparent 50%),
-                linear-gradient(135deg, #5a1699, #3a0d66);
-            background-attachment: fixed;
-            color: #ffffff;
-        }
+<style>
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:Arial,Helvetica,sans-serif;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255,215,0,0.35), transparent 40%),
+        radial-gradient(circle at 80% 25%, rgba(255,110,199,0.45), transparent 40%),
+        linear-gradient(135deg,#220538,#5a1699,#7b2ff7);
+    color:#fff;
+    position:relative;
+    overflow-x:hidden;
+}
 
-        .glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 2.5rem;
-        }
+/* Banner */
+.ny-banner{
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:90%;
+    max-width:1100px;
+    z-index:50;
+    pointer-events:none;
+}
+.ny-banner img{
+    width:100%;
+    transform-origin:top center;
+    animation:swing 6s ease-in-out infinite;
+}
+@keyframes swing{
+    0%,100%{transform:rotate(0deg);}
+    50%{transform:rotate(1.5deg);}
+}
 
-        .logo-card {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+/* Glass card */
+.glass{
+    background:rgba(255,255,255,.15);
+    backdrop-filter:blur(18px);
+    border-radius:24px;
+    padding:16px;
+    transition:.4s;
+}
+.glass:hover{
+    transform:translateY(-8px);
+    box-shadow:0 20px 40px rgba(0,0,0,.4);
+}
 
-        .logo-card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(198, 120, 255, 0.8);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .buy-btn {
-            background: linear-gradient(135deg, #c678ff 0%, #783cd2 100%);
-            transition: all 0.3s ease;
-        }
-
-        .buy-btn:hover {
-            filter: brightness(1.2);
-            box-shadow: 0 0 20px rgba(198, 120, 255, 0.5);
-        }
-    </style>
+/* Button */
+.buy-btn{
+    background:linear-gradient(135deg,#ffd700,#ff6ec7,#c678ff);
+    color:#220538;
+    font-weight:800;
+    padding:10px 18px;
+    border-radius:16px;
+    font-size:10px;
+    text-transform:uppercase;
+}
+</style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<nav class="sticky top-0 z-50 px-6 py-5 bg-black/20 backdrop-blur-md border-b border-white/10">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <h1 class="text-xl font-black tracking-tighter uppercase italic">
-            NEXUS<span class="text-[#c678ff]">STORE</span>
-        </h1>
-        <a href="https://t.me/NexusMM" target="_blank"
-           class="text-[10px] font-bold px-5 py-2 glass hover:bg-white/20 transition uppercase tracking-widest">
-            Telegram Support
-        </a>
-    </div>
-</nav>
+<!-- 🎀 NEW YEAR BANNER -->
+<div class="ny-banner">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767467180/zdbld1v2krzzff4pttov.png" alt="New Year Banner">
+</div>
 
 <!-- HEADER -->
-<header class="pt-20 pb-10 px-6 text-center">
-    <h2 class="text-5xl md:text-7xl font-extrabold mb-4 tracking-tighter">
-        Premium Visuals
-    </h2>
-    <p class="text-white/70 max-w-md mx-auto text-sm font-medium">
-        Unique digital identities starting at ₹20.
-    </p>
+<header class="text-center" style="padding-top:260px;padding-bottom:40px">
+<h1 class="text-5xl font-black mb-4">NEXUS LOGO </h1>
+<p class="opacity-80">Premium logos starting at just ₹20</p>
 </header>
 
 <!-- STORE -->
-<main class="max-w-7xl mx-auto px-6 py-10">
-    <div id="gallery"
-         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-    </div>
-</main>
+<div class="max-w-7xl mx-auto px-6 pb-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
 
-<!-- SCRIPT -->
-<script>
-const LOGO_DATA = [
-  { code: "NX-01", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460668/knqgricc47xoj1tdq3bi.png" },
-  { code: "NX-02", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460671/dmeflij5tc2forlnvssu.png" },
-  { code: "NX-03", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460674/trwfcrsaaovj0t2qc6nr.png" },
-  { code: "NX-04", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460676/dmk4wyu8f3zlak91ussm.png" },
-  { code: "NX-05", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460677/yhlphi73tvqihzrvkykp.jpg" },
-  { code: "NX-06", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460679/bnazybqocdhnpxen9qa5.jpg" },
-  { code: "NX-07", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460680/orjpurnjwjioxeamdbx1.jpg" },
-  { code: "NX-08", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460683/ubywcegcvfnipqbp3b7x.png" },
-  { code: "NX-09", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460684/gyfjjqumkwnuzqc2diwq.png" },
-  { code: "NX-10", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460686/eanqagzmoei2moi9vk2j.png" },
-  { code: "NX-11", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460688/q3tq3ps6cnywlcjikfen.png" },
-  { code: "NX-12", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460690/dp9yjrpgutvfks7fbcxe.png" },
-  { code: "NX-13", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460693/s7lgqekcwoocnmhhsyp1.png" },
-  { code: "NX-14", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460695/xg5x7vxibodxleaks4gv.png" },
-  { code: "NX-15", price: "20", url: "https://res.cloudinary.com/dex1veqf2/image/upload/f_auto,q_auto/v1767460696/yzpmk01j7xkkbs2km8pn.jpg" }
-];
+<!-- CARD 1 -->
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460668/knqgricc47xoj1tdq3bi.png" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-01</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-01" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
 
-function renderStore() {
-    const container = document.getElementById("gallery");
-    container.innerHTML = LOGO_DATA.map(logo => `
-        <div class="logo-card glass p-4 flex flex-col">
-            <div class="relative rounded-[1.8rem] overflow-hidden aspect-square mb-5 shadow-inner">
-                <img src="${logo.url}" loading="lazy"
-                     class="w-full h-full object-cover">
-            </div>
-            <div class="flex justify-between items-center px-2">
-                <div>
-                    <p class="text-[10px] font-bold text-[#c678ff] uppercase tracking-widest mb-1">${logo.code}</p>
-                    <h4 class="text-2xl font-black italic">₹${logo.price}</h4>
-                </div>
-                <button onclick="buyNow('${logo.code}','${logo.price}')"
-                        class="buy-btn px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white">
-                    Buy Now
-                </button>
-            </div>
-        </div>
-    `).join("");
-}
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460671/dmeflij5tc2forlnvssu.png" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-02</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-02" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
 
-function buyNow(code, price) {
-    const msg = `Hello Nexus, I would like to purchase Logo ${code} for ₹${price}.`;
-    window.open(`https://t.me/NexusMM?text=${encodeURIComponent(msg)}`, "_blank");
-}
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460674/trwfcrsaaovj0t2qc6nr.png" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-03</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-03" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
 
-renderStore();
-</script>
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460676/dmk4wyu8f3zlak91ussm.png" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-04</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-04" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
+
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460677/yhlphi73tvqihzrvkykp.jpg" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-05</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-05" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
+
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460679/bnazybqocdhnpxen9qa5.jpg" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-06</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-06" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
+
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460680/orjpurnjwjioxeamdbx1.jpg" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-07</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-07" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
+
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460683/ubywcegcvfnipqbp3b7x.png" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-08</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-08" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
+
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460684/gyfjjqumkwnuzqc2diwq.png" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-09</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-09" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
+
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460686/eanqagzmoei2moi9vk2j.png" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-10</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-10" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
+
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460688/q3tq3ps6cnywlcjikfen.png" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-11</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-11" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
+
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460690/dp9yjrpgutvfks7fbcxe.png" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-12</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-12" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
+
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460693/s7lgqekcwoocnmhhsyp1.png" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-13</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-13" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
+
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460695/xg5x7vxibodxleaks4gv.png" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-14</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-14" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
+
+<div class="glass">
+<img src="https://res.cloudinary.com/dex1veqf2/image/upload/v1767460696/yzpmk01j7xkkbs2km8pn.jpg" class="w-full rounded-xl mb-4">
+<p class="text-xs text-yellow-300 font-bold">NX-15</p>
+<h3 class="text-2xl font-black italic mb-3">₹20</h3>
+<a href="https://t.me/NexusMM?text=Hello%20Nexus,%20I%20want%20NX-15" target="_blank" class="buy-btn inline-block">Buy Now</a>
+</div>
+
+</div>
 
 </body>
 </html>
