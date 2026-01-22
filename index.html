@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NexusLogo </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap">
+    <style>
+        :root {
+            --gold-primary: #FFD700;
+            --gold-dark: #B8860B;
+            --sakura-pink: #ffb7c5;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(20, 20, 20, 0.85);
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--dark-bg);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            background-image: radial-gradient(circle at center, #1a1215 0%, #0a0a0a 100%);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* --- Falling Sakura Petals --- */
+        .petal { position: fixed; top: -10%; background-color: var(--sakura-pink); border-radius: 10px 0 10px 10px; opacity: 0.3; pointer-events: none; z-index: 1; animation: fall linear infinite; }
+        @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.8; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: rgba(0,0,0,0.9); border-bottom: 2px solid var(--gold-dark); position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(15px); }
+        .gold-gradient { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 40px 5%; max-width: 1400px; margin: 0 auto; z-index: 2; position: relative; }
+        .shop-box { background: var(--card-bg); border: 1px solid rgba(255, 215, 0, 0.1); backdrop-filter: blur(12px); border-radius: 2rem; padding: 20px; text-align: center; transition: 0.4s ease; }
+        .shop-box:hover { transform: translateY(-10px); border-color: var(--gold-primary); box-shadow: 0 15px 30px rgba(255, 215, 0, 0.2); }
+        .shop-box img, .shop-box iframe { width: 100%; height: 220px; object-fit: contain; border-radius: 1.5rem; margin-bottom: 15px; background: #000; border: none; }
+
+        .gold-btn { background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary)); color: #000; font-weight: 900; text-transform: uppercase; padding: 15px; border: none; border-radius: 12px; cursor: pointer; width: 100%; font-family: 'Montserrat'; transition: 0.3s; }
+        .gold-btn:hover:not(:disabled) { filter: brightness(1.2); transform: scale(1.02); box-shadow: 0 0 15px var(--gold-primary); }
+        .gold-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+
+        .cart-counter-btn { border: 2px solid var(--gold-primary); background: transparent; color: var(--gold-primary); padding: 10px 20px; border-radius: 30px; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        
+        .progress-container { background: rgba(255,255,255,0.1); border-radius: 10px; height: 8px; margin: 15px 0; overflow: hidden; }
+        .progress-bar { background: var(--gold-primary); height: 100%; width: 0%; transition: 0.5s ease; }
+
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
+        .modal-content { background: #0f0f0f; padding: 30px; border-radius: 2rem; width: 90%; max-width: 420px; border: 1px solid var(--gold-dark); max-height: 90vh; overflow-y: auto; }
+        .imperial-input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--gold-dark); background: #000; color: #fff; margin-bottom: 15px; box-sizing: border-box; font-family: 'Montserrat'; outline: none; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; border-bottom: 1px solid #222; padding-bottom: 8px; }
+
+        #purchase-toast { position: fixed; bottom: 25px; left: 25px; background: rgba(15, 15, 15, 0.95); border-left: 5px solid var(--gold-primary); padding: 15px 20px; border-radius: 12px; display: flex; align-items: center; gap: 12px; z-index: 5000; transform: translateX(-150%); transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 0 10px 30px rgba(0,0,0,0.5); pointer-events: none; }
+        #purchase-toast.show { transform: translateX(0); }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; color: #fff; font-size: 11px; }
+        th, td { border: 1px solid #333; padding: 8px; text-align: left; }
+        th { background: var(--gold-dark); color: #000; }
+        
+        .terms-box { font-size: 10px; color: #888; margin-bottom: 15px; display: flex; align-items: flex-start; gap: 8px; text-align: left; }
+        .terms-box input { margin-top: 2px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="gold-gradient" style="font-size: 1.5rem;">NEXUS VAULT</div>
+    <button class="cart-counter-btn" onclick="toggleCart()">VAULT (<span id="count">0</span>)</button>
+</header>
+
+<div class="grid" id="productGrid"></div>
+
+<div id="purchase-toast">
+    <div style="font-size: 20px;">👑</div>
+    <div style="font-size: 13px;"><b id="toast-user" style="color:var(--gold-primary); display:block;">Order Confirmed!</b><span style="opacity:0.7; font-size:11px;">Just now</span></div>
+</div>
+
+<div id="cartModal" class="modal">
+    <div class="modal-content">
+        <div id="step1">
+            <h2 class="gold-gradient" style="text-align:center;">VAULT ITEMS</h2>
+            <div id="itemsList"></div>
+            <div class="progress-container"><div class="progress-bar" id="pBar"></div></div>
+            <p id="promoMsg" style="text-align:center; font-size:11px; color:var(--sakura-pink);"></p>
+            <div style="display:flex; justify-content:space-between; font-size: 1.5rem; font-weight: 900; margin-top:20px;">
+                <span>TOTAL</span>
+                <span class="gold-gradient" id="finalTotal">₹0</span>
+            </div>
+            <button class="gold-btn" style="margin-top:20px;" onclick="goToStep(2)">Enter Details</button>
+            <button onclick="toggleCart()" style="background:none; border:none; color:gray; width:100%; margin-top:15px; cursor:pointer;">Close</button>
+        </div>
+
+        <div id="step2" style="display:none;">
+            <h2 class="gold-gradient" style="text-align:center;">OWNER INFO</h2>
+            <input type="text" id="custName" placeholder="Full Name" class="imperial-input">
+            <input type="text" id="custContact" placeholder="Telegram @username" class="imperial-input">
+            
+            <div class="terms-box">
+                <input type="checkbox" id="termsCheck">
+                <label for="termsCheck">I agree that logos are digital assets. No refunds after delivery. I will send UTR after payment.</label>
+            </div>
+
+            <button class="gold-btn" onclick="goToStep3()">Generate Payment QR</button>
+            <button onclick="goToStep(1)" style="background:none; border:none; color:gray; width:100%; margin-top:15px; cursor:pointer;">Back</button>
+        </div>
+
+        <div id="step3" style="display:none; text-align:center;">
+            <h2 class="gold-gradient">SCAN & PAY</h2>
+            <div style="background:white; padding:10px; border-radius:15px; display:inline-block; margin-bottom:10px;">
+                <img id="upiQR" src="" style="width:160px; height:160px; display:block;">
+            </div>
+            <p style="font-weight:bold; color:var(--gold-primary);">Paying: ₹<span id="payAmt"></span></p>
+            <input type="text" id="utrInput" placeholder="Enter 12-Digit UTR" class="imperial-input" style="border-color:#ff4444;">
+            <button class="gold-btn" onclick="finalizeOrder()">Submit to Telegram</button>
+        </div>
+    </div>
+</div>
+
+<div id="adminModal" class="modal">
+    <div class="modal-content" style="max-width: 900px;">
+        <h2 class="gold-gradient">IMPERIAL LOGS</h2>
+        <div style="overflow-x:auto;">
+            <table id="adminTable">
+                <thead><tr><th>Date</th><th>Customer</th><th>Telegram</th><th>Codes</th><th>UTR</th><th>Amt</th></tr></thead>
+                <tbody id="adminBody"></tbody>
+            </table>
+        </div>
+        <button class="gold-btn" style="margin-top:20px;" onclick="exportToExcel()">Export to Excel (CSV)</button>
+        <button class="gold-btn" style="margin-top:10px; background:none; border:1px solid gray; color:white;" onclick="closeAdmin()">Close Panel</button>
+    </div>
+</div>
+
+<footer style="text-align:center; padding:40px; opacity:0.6; font-size:12px;">
+    <span id="adminTrigger" style="cursor:default; padding: 10px;">©</span> 2026 NEXUSLOGO STORE
+</footer>
+
+<script>
+    const logoIDs = [
+        "1YlgTBlmedNDXqLF-FaWvYMu7JSKQb_J3", "1Rfke6YZ1xqlDYkY_NxuCLeFWhfBSZqD7", 
+        "1_8BeyKLtRexUgWmg9ffbWDbmgLXHOh", "1uBpqchVRhWv-AeVcuGuSUqqcRExq26xY",
+        "1z_dMjlBOuytoNwONO-CEQ-VlwNRv08jB", "1YV3twVhH109nY7tloC2xJwB2MNPalr0X",
+        "1sHJloN37codYBBbf6kOXzMF4JS5UvTnz", "1TIEdQ7fgFZwyVawNym2KiTLV19gWX5-P",
+        "146tk4YgJccqOlHB1wwldnc2d7igTU-VH", "1LAnRd_AkSzOUhT879Hk1EIUARwMLLA8Z",
+        "1j7fOTqq4kSuWCJ2NR9ImWmcy-C-_ReDS", "1kcU66rGLI6PxVlxcatt0B_hqi69mpdIr",
+        "1jwuJ_hGw0Q3tupZ2CnnP450pDsvLveNi", "1xZzSe0_hT8Q8CUD9If2q3VA9aEvE_ZaK",
+        "1KCNxHjigvw_pQiJK4_aMTvX6Y0QiROik", "1v_DUcEPF4H5LyK-ttaI5X6r3oZjml0aF",
+        "1HWu5eqyXJ3KjeNwdNVvzkWu15zjB7DnJ", "15v_gaPAU3NWpsK0hPfdnH7wWS9DMSIh3",
+        "1KFvSQG84R94V-oscSkgxyw9_pGMHbLRr", "1PX3voz_QOMfxzObDYsDgq_e6ahF7Tw6i",
+        "1HAVGGaO5itHyDhcf8Ct3XNrwDyrLDu_n"
+    ];
+
+    const grid = document.getElementById('productGrid');
+    logoIDs.forEach((id, i) => {
+        const code = `NX${(i + 1).toString().padStart(2, '0')}`;
+        grid.innerHTML += `
+            <div class="shop-box">
+                ${id === "1HWu5eqyXJ3KjeNwdNVvzkWu15zjB7DnJ" ? `<iframe src="https://drive.google.com/file/d/${id}/preview"></iframe>` : `<img src="https://drive.google.com/thumbnail?id=${id}&sz=w1000">`}
+                <h3 class="gold-gradient">${code}</h3>
+                <div style="font-size: 1.5rem; font-weight: 900; margin: 10px 0;">₹20</div>
+                <button class="gold-btn" onclick="addToCart('${code}')">Add to Vault</button>
+            </div>`;
+    });
+
+    let cart = JSON.parse(localStorage.getItem('nexus_vault')) || [];
+    function save() { localStorage.setItem('nexus_vault', JSON.stringify(cart)); document.getElementById('count').innerText = cart.length; }
+
+    function addToCart(code) { cart.push(code); save(); }
+    function toggleCart() { 
+        const m = document.getElementById('cartModal');
+        m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+        if(m.style.display === 'flex') { 
+            document.getElementById('custName').value = localStorage.getItem('nx_name') || '';
+            document.getElementById('custContact').value = localStorage.getItem('nx_tg') || '';
+            goToStep(1); renderCart(); 
+        }
+    }
+
+    function renderCart() {
+        const list = document.getElementById('itemsList');
+        list.innerHTML = cart.length ? cart.map((item, i) => `
+            <div class="cart-item">
+                <span><b>${item}</b></span>
+                <button onclick="cart.splice(${i},1); save(); renderCart();" style="color:red; background:none; border:none; cursor:pointer;">✕</button>
+            </div>`).join('') : '<p style="text-align:center; opacity:0.5;">Empty Vault</p>';
+        let final = (cart.length * 20) - (cart.length >= 5 ? 20 : 0);
+        document.getElementById('finalTotal').innerText = '₹' + final;
+        document.getElementById('pBar').style.width = Math.min((cart.length / 5) * 100, 100) + "%";
+    }
+
+    function goToStep(n) { [1,2,3].forEach(s => document.getElementById('step'+s).style.display = (s===n?'block':'none')); }
+
+    function goToStep3() {
+        const name = document.getElementById('custName').value;
+        const tg = document.getElementById('custContact').value;
+        if(!name || !tg) return alert("Fill Name & Telegram!");
+        if(!document.getElementById('termsCheck').checked) return alert("Please accept the Terms & Conditions.");
+        
+        localStorage.setItem('nx_name', name);
+        localStorage.setItem('nx_tg', tg);
+        
+        let final = (cart.length * 20) - (cart.length >= 5 ? 20 : 0);
+        document.getElementById('payAmt').innerText = final;
+        document.getElementById('upiQR').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=Lavyanshboss@fam&pn=NexusLogo&am=${final}&cu=INR`)}`;
+        goToStep(3);
+    }
+
+    function finalizeOrder() {
+        const utr = document.getElementById('utrInput').value;
+        if(utr.length < 8) return alert("Enter valid 12-digit UTR!");
+        
+        const order = {
+            date: new Date().toLocaleString(),
+            name: document.getElementById('custName').value,
+            tg: document.getElementById('custContact').value,
+            codes: cart.join(", "),
+            total: (cart.length * 20) - (cart.length >= 5 ? 20 : 0),
+            utr: utr
+        };
+
+        let logs = JSON.parse(localStorage.getItem('nexus_admin_orders')) || [];
+        logs.push(order);
+        localStorage.setItem('nexus_admin_orders', JSON.stringify(logs));
+
+        window.open(`https://t.me/Nexusmm?text=👑 *NEW ORDER*%0A👤 Name: ${order.name}%0A🆔 TG: ${order.tg}%0A📦 Codes: ${order.codes}%0A💰 Paid: ₹${order.total}%0A🔑 UTR: ${utr}`);
+        cart = []; save(); toggleCart();
+    }
+
+    // --- Admin Panel Logic ---
+    let clicks = 0;
+    document.getElementById('adminTrigger').onclick = function() {
+        clicks++;
+        if(clicks >= 5) {
+            clicks = 0;
+            if(prompt("Admin Access:") === "Nexus786") {
+                document.getElementById('adminModal').style.display = 'flex';
+                renderAdmin();
+            }
+        }
+    };
+    function closeAdmin() { document.getElementById('adminModal').style.display = 'none'; }
+    function renderAdmin() {
+        const logs = JSON.parse(localStorage.getItem('nexus_admin_orders')) || [];
+        document.getElementById('adminBody').innerHTML = logs.map(l => `
+            <tr><td>${l.date}</td><td>${l.name}</td><td><a href="https://t.me/${l.tg.replace('@','')}" style="color:var(--gold-primary)">${l.tg}</a></td><td>${l.codes}</td><td style="color:cyan">${l.utr}</td><td>₹${l.total}</td></tr>
+        `).reverse().join('');
+    }
+
+    function exportToExcel() {
+        const logs = JSON.parse(localStorage.getItem('nexus_admin_orders')) || [];
+        if(!logs.length) return alert("No data to export.");
+        let csv = "Date,Name,Telegram,Codes,UTR,Amount\n";
+        logs.forEach(o => { csv += `"${o.date}","${o.name}","${o.tg}","${o.codes}","${o.utr}","${o.total}"\n`; });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = "Nexus_Orders_2026.csv";
+        link.click();
+    }
+
+    setInterval(() => {
+        const p = document.createElement('div'); p.className = 'petal';
+        p.style.left = Math.random() * 100 + 'vw'; p.style.animationDuration = (Math.random()*3+2)+'s';
+        document.body.appendChild(p); setTimeout(() => p.remove(), 5000);
+    }, 500);
+
+    save();
+</script>
+</body>
+</html>
