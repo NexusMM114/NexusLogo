@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>NexusLogo | Republic Sale 🇮🇳</title>
+    <title>NexusLogo | Republic Vault 🇮🇳</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap">
     <style>
@@ -11,40 +11,47 @@
             --gold-dark: #B8860B;
             --saffron: #FF9933;
             --green: #128807;
+            --navy: #000080;
             --dark-bg: #0a0a0a;
-            --card-bg: rgba(20, 20, 20, 0.85);
+            --card-bg: rgba(15, 15, 15, 0.9);
         }
 
         body {
             margin: 0;
-            background-color: var(--dark-bg);
+            /* --- Tricolor Flag Background Logic --- */
+            background: linear-gradient(
+                to bottom, 
+                rgba(255, 153, 51, 0.1) 0%,   
+                rgba(10, 10, 10, 1) 50%,  
+                rgba(18, 136, 7, 0.1) 100%    
+            ),
+            radial-gradient(circle at center, #1a1215 0%, #0a0a0a 100%);
+            background-attachment: fixed;
             color: #fff;
             font-family: 'Montserrat', sans-serif;
-            background-image: radial-gradient(circle at center, #1a1215 0%, #0a0a0a 100%);
             overflow-x: hidden;
             min-height: 100vh;
         }
 
-        /* --- Republic Falling Petals --- */
+        /* --- Falling Republic Petals --- */
         .petal { position: fixed; top: -10%; border-radius: 50% 0 50% 50%; opacity: 0.6; pointer-events: none; z-index: 1; animation: fall linear infinite; width: 12px; height: 12px; }
         @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.8; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
 
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: rgba(0,0,0,0.95); border-top: 4px solid var(--saffron); border-bottom: 3px solid var(--green); position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(15px); gap: 10px; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: rgba(0,0,0,0.95); border-top: 5px solid var(--saffron); border-bottom: 5px solid var(--green); position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(15px); box-shadow: 0 4px 20px rgba(0,0,128,0.3); }
         .gold-gradient { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
         
-        /* Timer Styles */
-        #timer-clock { font-family: monospace; color: #fff; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--saffron); font-size: 14px; transition: all 0.5s ease; }
+        #timer-clock { font-family: monospace; color: #fff; background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 8px; border: 1px solid var(--saffron); font-size: 14px; transition: 0.5s; }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 40px 5%; max-width: 1400px; margin: 0 auto; z-index: 2; position: relative; }
         .shop-box { background: var(--card-bg); border: 1px solid rgba(255, 215, 0, 0.1); backdrop-filter: blur(12px); border-radius: 2rem; padding: 20px; text-align: center; transition: 0.4s ease; position: relative; }
         .shop-box:hover { transform: translateY(-10px); border-color: var(--gold-primary); box-shadow: 0 15px 30px rgba(255, 215, 0, 0.2); }
         .shop-box img, .shop-box iframe { width: 100%; height: 220px; object-fit: contain; border-radius: 1.5rem; margin-bottom: 15px; background: #000; border: none; }
 
-        .discount-tag { position: absolute; top: 15px; right: 15px; background: #ff0000; color: white; padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: 900; z-index: 5; animation: pulse 1.5s infinite; }
+        .discount-tag { position: absolute; top: 15px; right: 15px; background: red; color: white; padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: 900; z-index: 5; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-        .gold-btn { background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary)); color: #000; font-weight: 900; text-transform: uppercase; padding: 15px; border: none; border-radius: 12px; cursor: pointer; width: 100%; font-family: 'Montserrat'; transition: 0.3s; }
-        .gold-btn:hover:not(:disabled) { filter: brightness(1.2); box-shadow: 0 0 15px var(--gold-primary); }
+        .gold-btn { background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary)); color: #000; font-weight: 900; text-transform: uppercase; padding: 15px; border: none; border-radius: 12px; cursor: pointer; width: 100%; transition: 0.3s; }
+        .gold-btn:hover { filter: brightness(1.2); box-shadow: 0 0 15px var(--gold-primary); }
         
         .cart-counter-btn { border: 2px solid var(--gold-primary); background: transparent; color: var(--gold-primary); padding: 10px 20px; border-radius: 30px; font-weight: 900; cursor: pointer; }
         
@@ -52,17 +59,16 @@
         .modal-content { background: #0f0f0f; padding: 30px; border-radius: 2rem; width: 90%; max-width: 420px; border: 1px solid var(--gold-dark); max-height: 90vh; overflow-y: auto; text-align: center; }
         .imperial-input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--gold-dark); background: #000; color: #fff; margin-bottom: 15px; box-sizing: border-box; outline: none; }
         
-        /* Last Chance Popup Styling */
-        #lastChancePopup { border: 2px solid #ff4444; box-shadow: 0 0 30px rgba(255, 68, 68, 0.4); }
+        #lastChancePopup { border: 3px solid #ff4444; }
 
-        @media (max-width: 600px) { header { flex-direction: column; text-align: center; } }
+        @media (max-width: 600px) { header { flex-direction: column; text-align: center; gap: 15px; } }
     </style>
 </head>
 <body>
 
 <header>
     <div class="gold-gradient" style="font-size: 1.5rem;">NEXUS VAULT</div>
-    <div id="countdown-timer" style="color: var(--saffron); font-size: 0.8rem; font-weight: 700;">
+    <div id="countdown-timer" style="color: var(--saffron); font-size: 0.85rem; font-weight: 800;">
         SALE ENDS: <span id="timer-clock">00:00:00:00</span>
     </div>
     <button class="cart-counter-btn" onclick="toggleCart()">VAULT (<span id="count">0</span>)</button>
@@ -75,7 +81,7 @@
         <div id="step1">
             <h2 class="gold-gradient">VAULT ITEMS</h2>
             <div id="itemsList"></div>
-            <p id="promoMsg" style="font-size:11px; color:var(--saffron); margin: 15px 0;"></p>
+            <p id="promoMsg" style="font-size:11px; color:var(--saffron); margin: 15px 0; font-weight:700;"></p>
             <div style="display:flex; justify-content:space-between; font-size: 1.5rem; font-weight: 900;">
                 <span>TOTAL</span>
                 <span class="gold-gradient" id="finalTotal">₹0</span>
@@ -99,17 +105,17 @@
             </div>
             <p style="font-weight:bold; color:var(--gold-primary);">Total: ₹<span id="payAmt"></span></p>
             <input type="text" id="utrInput" placeholder="Enter 12-Digit UTR" class="imperial-input" style="border-color:var(--green);">
-            <button class="gold-btn" onclick="finalizeOrder()">Submit to Admin</button>
+            <button class="gold-btn" onclick="finalizeOrder()">Submit Order</button>
         </div>
     </div>
 </div>
 
 <div id="lastChancePopup" class="modal">
     <div class="modal-content">
-        <h1 style="color:#ff4444; font-size: 3rem; margin: 0;">⏳</h1>
-        <h2 style="color:#ff4444; font-weight: 900;">LAST CHANCE!</h2>
-        <p style="font-size: 14px; opacity: 0.9;">The Republic Day Sale is ending in less than 2 hours. Your 10% discount and Bulk Offers are about to expire!</p>
-        <button class="gold-btn" onclick="closePopup('lastChancePopup')" style="background: #ff4444; color: white;">GRAB MY LOGOS</button>
+        <h1 style="font-size: 3rem;">⏳</h1>
+        <h2 style="color:#ff4444; font-weight: 900;">URGENT!</h2>
+        <p>Republic Day Sale ends in under 2 hours! Grab your logos at ₹18 before the price returns to ₹20.</p>
+        <button class="gold-btn" onclick="closePopup('lastChancePopup')" style="background: #ff4444; color: white;">SHOP NOW</button>
     </div>
 </div>
 
@@ -151,11 +157,7 @@
     let cart = JSON.parse(localStorage.getItem('nexus_vault')) || [];
     function save() { localStorage.setItem('nexus_vault', JSON.stringify(cart)); document.getElementById('count').innerText = cart.length; }
     function addToCart(code) { cart.push(code); save(); }
-    function toggleCart() { 
-        const m = document.getElementById('cartModal');
-        m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
-        if(m.style.display === 'flex') renderCart();
-    }
+    function toggleCart() { document.getElementById('cartModal').style.display = (document.getElementById('cartModal').style.display === 'flex') ? 'none' : 'flex'; renderCart(); }
     function closePopup(id) { document.getElementById(id).style.display = 'none'; }
 
     function renderCart() {
@@ -165,7 +167,7 @@
         let discount = (cart.length >= 10) ? 50 : (cart.length >= 5 ? 20 : 0);
         let final = subtotal - discount;
         document.getElementById('finalTotal').innerText = '₹' + (final < 0 ? 0 : final);
-        document.getElementById('promoMsg').innerText = cart.length >= 10 ? "🇮🇳 MAX DISCOUNT APPLIED!" : (cart.length >= 5 ? "₹20 OFF Applied!" : "Add 5 logos for extra discount!");
+        document.getElementById('promoMsg').innerText = cart.length >= 10 ? "🇮🇳 MAX BULK DISCOUNT ACTIVE!" : (cart.length >= 5 ? "₹20 OFF Applied!" : "Buy 5 for extra ₹20 OFF!");
     }
 
     function goToStep(n) { [1,2,3].forEach(s => document.getElementById('step'+s).style.display = (s===n?'block':'none')); }
@@ -178,33 +180,30 @@
     function finalizeOrder() {
         const utr = document.getElementById('utrInput').value;
         if(utr.length < 6) return alert("Invalid UTR!");
-        window.open(`https://t.me/Nexusmm?text=🇮🇳 *ORDER*%0A👤 Name: ${document.getElementById('custName').value}%0A📦 Items: ${cart.join(", ")}%0A💰 Paid: ₹${document.getElementById('payAmt').innerText}%0A🔑 UTR: ${utr}`);
+        window.open(`https://t.me/Nexusmm?text=🇮🇳 *REPUBLIC ORDER*%0A👤 Name: ${document.getElementById('custName').value}%0A📦 Items: ${cart.join(", ")}%0A💰 Paid: ₹${document.getElementById('payAmt').innerText}%0A🔑 UTR: ${utr}`);
         cart = []; save(); toggleCart();
     }
 
-    // --- Countdown Timer Logic ---
-    let hasShownPopup = false;
+    // --- Timer & Alert Logic ---
+    let popupShown = false;
     function startTimer() {
         const endTime = new Date().getTime() + (48 * 60 * 60 * 1000);
-        const clockSpan = document.getElementById("timer-clock");
+        const clock = document.getElementById("timer-clock");
         setInterval(() => {
             const now = new Date().getTime();
             const diff = endTime - now;
-            if (diff < 0) { clockSpan.innerText = "EXPIRED"; return; }
+            if (diff < 0) { clock.innerText = "EXPIRED"; return; }
             const d = Math.floor(diff / (1000 * 60 * 60 * 24));
             const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const s = Math.floor((diff % (1000 * 60)) / 1000);
-            clockSpan.innerText = `${d}d ${h}h ${m}m ${s}s`;
+            clock.innerText = `${d}d ${h}h ${m}m ${s}s`;
 
-            // Trigger Red Alert and Popup at 2 Hours (7200000ms)
-            if (diff < 7200000) {
-                clockSpan.style.color = "#ff4444";
-                clockSpan.style.borderColor = "#ff4444";
-                if (!hasShownPopup) {
-                    document.getElementById('lastChancePopup').style.display = 'flex';
-                    hasShownPopup = true;
-                }
+            if (diff < 7200000) { // 2 Hours
+                clock.style.color = "#ff4444";
+                clock.style.borderColor = "#ff4444";
+                clock.style.boxShadow = "0 0 10px #ff4444";
+                if (!popupShown) { document.getElementById('lastChancePopup').style.display = 'flex'; popupShown = true; }
             }
         }, 1000);
     }
@@ -212,8 +211,8 @@
     // --- Republic Petals ---
     setInterval(() => {
         const p = document.createElement('div'); p.className = 'petal';
-        const colors = ['#FF9933', '#FFFFFF', '#128807'];
-        p.style.backgroundColor = colors[Math.floor(Math.random() * 3)];
+        const c = ['#FF9933', '#FFFFFF', '#128807'];
+        p.style.backgroundColor = c[Math.floor(Math.random() * 3)];
         p.style.left = Math.random() * 100 + 'vw'; p.style.animationDuration = (Math.random()*3+2)+'s';
         document.body.appendChild(p); setTimeout(() => p.remove(), 5000);
     }, 400);
