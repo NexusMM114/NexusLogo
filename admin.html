@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nexus | Admin</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>ADMIN CONSOLE</h1>
+        <div class="glass-panel">
+            <h3>USER DATABASE</h3>
+            <div id="admin-user-list"></div>
+        </div>
+        <br>
+        <button class="btn" onclick="logout()" style="max-width:200px;">TERMINATE ADMIN SESSION</button>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        function renderAdmin() {
+            const db = JSON.parse(localStorage.getItem('nexus_db') || "[]");
+            document.getElementById('admin-user-list').innerHTML = db.map(u => `
+                <div style="padding:10px; border-bottom:1px solid #222;">
+                    ${u.email} <b style="color:var(--neon-blue)">@${u.telegram}</b>
+                </div>
+            `).join('') || "No users registered.";
+        }
+        renderAdmin();
+    </script>
+</body>
+</html>
