@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nexus | Access</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-section { display: none; text-align: center; }
+        .active-section { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+        .link { color: var(--neon-blue); cursor: pointer; font-size: 0.9em; text-decoration: underline; }
+        .input-group { text-align: left; margin-bottom: 15px; }
+        label { font-size: 0.8em; color: #888; margin-left: 5px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="brand">NEXUS STUDIO</div>
+    </nav>
+
+    <div class="container" style="display:flex; justify-content:center; align-items:center; min-height:80vh;">
+        <div class="glass-panel" style="width: 100%; max-width: 380px; padding: 40px;">
+            
+            <div id="login-sec" class="auth-section active-section">
+                <h2 style="color:var(--neon-purple); letter-spacing:2px;">SYSTEM LOGIN</h2>
+                
+                <div class="input-group">
+                    <label>EMAIL ID</label>
+                    <input type="email" id="l-email" placeholder="agent@nexus.com">
+                </div>
+                <div class="input-group">
+                    <label>PASSCODE</label>
+                    <input type="password" id="l-pass" placeholder="••••••••">
+                </div>
+
+                <button class="btn pulse" onclick="performLogin()">INITIALIZE SESSION</button>
+                
+                <p style="margin-top:20px; font-size:0.9em; color:#aaa;">
+                    New Agent? <span class="link" onclick="switchView('register-sec')">Create Identity</span>
+                </p>
+                <p><span class="link" style="color:#ff0055; font-size:0.8em;" onclick="switchView('forgot-sec')">Forgot Passcode?</span></p>
+            </div>
+
+            <div id="register-sec" class="auth-section">
+                <h2 style="color:var(--neon-blue); letter-spacing:2px;">NEW IDENTITY</h2>
+                
+                <div class="input-group">
+                    <label>EMAIL ID</label>
+                    <input type="email" id="r-email" placeholder="new@nexus.com">
+                </div>
+                <div class="input-group">
+                    <label>TELEGRAM HANDLE</label>
+                    <input type="text" id="r-tele" placeholder="@username">
+                </div>
+                <div class="input-group">
+                    <label>CREATE PASSCODE</label>
+                    <input type="password" id="r-pass" placeholder="••••••••">
+                </div>
+
+                <button class="btn" style="border-color:var(--neon-blue); color:var(--neon-blue);" onclick="performRegister()">REGISTER IDENTITY</button>
+                
+                <p style="margin-top:20px; font-size:0.9em; color:#aaa;">
+                    Has Account? <span class="link" onclick="switchView('login-sec')">Login Here</span>
+                </p>
+            </div>
+
+            <div id="forgot-sec" class="auth-section">
+                <h2 style="color:#ff0055; letter-spacing:2px;">RECOVERY</h2>
+                <p style="color:gray; font-size:0.8em; margin-bottom:20px;">Identity verification required for reset.</p>
+                
+                <div class="input-group">
+                    <label>REGISTERED EMAIL</label>
+                    <input type="email" id="f-email" placeholder="agent@nexus.com">
+                </div>
+
+                <button class="btn" style="border-color:#ff0055; color:#ff0055;" onclick="performResetRequest()">SEND REQUEST</button>
+                
+                <p style="margin-top:20px;"><span class="link" onclick="switchView('login-sec')">Cancel</span></p>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
