@@ -36,8 +36,8 @@
             <div id="section-login">
                 <h2 style="color:#bd00ff; letter-spacing:2px;">SYSTEM ACCESS</h2>
                 
-                <input type="email" id="inp-email" placeholder="Email (admin@nexus.com)">
-                <input type="password" id="inp-pass" placeholder="Password (admin123)">
+                <input type="email" id="inp-email" placeholder="Email (youremail@gmail.com)">
+                <input type="password" id="inp-pass" placeholder="Password (••••••••••)">
                 
                 <p style="text-align:right; font-size:0.8em;">
                     <span class="link" style="color:#ff0055" onclick="showSection('section-forgot')">Forgot Passcode?</span>
@@ -99,8 +99,8 @@
             }
 
             // ADMIN CHECK
-            if (email === "admin@nexus.com" && pass === "admin123") {
-                const adminUser = { email: email, telegram: "NexusAdmin", role: "admin" };
+            if (email === "admin@nexuslogo.shop" && pass === "NexusAdmin12") {
+                const adminUser = { email: email, telegram: "NexusMM", role: "admin" };
                 localStorage.setItem('nexus_user', JSON.stringify(adminUser));
                 window.location.href = "admin.html";
                 return;
