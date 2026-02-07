@@ -2,85 +2,190 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus | Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
-        .auth-section { display: none; text-align: center; }
-        .active-section { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-        .link { color: var(--neon-blue); cursor: pointer; font-size: 0.9em; text-decoration: underline; }
-        .input-group { text-align: left; margin-bottom: 15px; }
-        label { font-size: 0.8em; color: #888; margin-left: 5px; }
+        /* CSS to handle the switching of views */
+        .auth-view {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .active-view {
+            display: block; /* Only the active one is shown */
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Styling for the clickable links */
+        .switch-link {
+            color: var(--neon-blue);
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.9em;
+            transition: 0.3s;
+        }
+        .switch-link:hover {
+            color: white;
+            text-shadow: 0 0 5px var(--neon-blue);
+        }
+
+        /* Input styling fix */
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { color: #888; font-size: 0.8em; margin-left: 5px; }
     </style>
 </head>
 <body>
+
     <nav>
-        <div class="brand">NEXUS STUDIO</div>
+        <div class="brand" onclick="window.location.href='index.html'">NEXUS STUDIO</div>
     </nav>
 
-    <div class="container" style="display:flex; justify-content:center; align-items:center; min-height:80vh;">
+    <div class="container" style="display:flex; justify-content:center; align-items:center; min-height:85vh;">
         <div class="glass-panel" style="width: 100%; max-width: 380px; padding: 40px;">
             
-            <div id="login-sec" class="auth-section active-section">
-                <h2 style="color:var(--neon-purple); letter-spacing:2px;">SYSTEM LOGIN</h2>
+            <div id="view-login" class="auth-view active-view">
+                <h2 style="color:var(--neon-purple); letter-spacing:3px;">SYSTEM ACCESS</h2>
                 
                 <div class="input-group">
                     <label>EMAIL ID</label>
-                    <input type="email" id="l-email" placeholder="agent@nexus.com">
+                    <input type="email" id="login-email" placeholder="agent@nexus.com">
                 </div>
                 <div class="input-group">
                     <label>PASSCODE</label>
-                    <input type="password" id="l-pass" placeholder="••••••••">
+                    <input type="password" id="login-pass" placeholder="••••••••">
                 </div>
 
-                <button class="btn pulse" onclick="performLogin()">INITIALIZE SESSION</button>
-                
-                <p style="margin-top:20px; font-size:0.9em; color:#aaa;">
-                    New Agent? <span class="link" onclick="switchView('register-sec')">Create Identity</span>
+                <p style="text-align:right; margin-top:-10px;">
+                    <span class="switch-link" style="color:#ff0055; font-size:0.8em;" onclick="showView('view-forgot')">Forgot Passcode?</span>
                 </p>
-                <p><span class="link" style="color:#ff0055; font-size:0.8em;" onclick="switchView('forgot-sec')">Forgot Passcode?</span></p>
+
+                <button class="btn pulse" onclick="handleLogin()">INITIALIZE SESSION</button>
+
+                <p style="margin-top:25px; color:#aaa; font-size:0.9em;">
+                    New Agent? <span class="switch-link" onclick="showView('view-register')">Create Identity</span>
+                </p>
             </div>
 
-            <div id="register-sec" class="auth-section">
-                <h2 style="color:var(--neon-blue); letter-spacing:2px;">NEW IDENTITY</h2>
+            <div id="view-register" class="auth-view">
+                <h2 style="color:var(--neon-blue); letter-spacing:3px;">NEW IDENTITY</h2>
                 
                 <div class="input-group">
                     <label>EMAIL ID</label>
-                    <input type="email" id="r-email" placeholder="new@nexus.com">
+                    <input type="email" id="reg-email" placeholder="new@nexus.com">
                 </div>
                 <div class="input-group">
                     <label>TELEGRAM HANDLE</label>
-                    <input type="text" id="r-tele" placeholder="@username">
+                    <input type="text" id="reg-tele" placeholder="@username">
                 </div>
                 <div class="input-group">
                     <label>CREATE PASSCODE</label>
-                    <input type="password" id="r-pass" placeholder="••••••••">
+                    <input type="password" id="reg-pass" placeholder="••••••••">
                 </div>
 
-                <button class="btn" style="border-color:var(--neon-blue); color:var(--neon-blue);" onclick="performRegister()">REGISTER IDENTITY</button>
-                
-                <p style="margin-top:20px; font-size:0.9em; color:#aaa;">
-                    Has Account? <span class="link" onclick="switchView('login-sec')">Login Here</span>
+                <button class="btn" style="border-color:var(--neon-blue); color:var(--neon-blue);" onclick="handleRegister()">REGISTER IDENTITY</button>
+
+                <p style="margin-top:25px; color:#aaa; font-size:0.9em;">
+                    Has Account? <span class="switch-link" style="color:var(--neon-purple);" onclick="showView('view-login')">Login Here</span>
                 </p>
             </div>
 
-            <div id="forgot-sec" class="auth-section">
-                <h2 style="color:#ff0055; letter-spacing:2px;">RECOVERY</h2>
-                <p style="color:gray; font-size:0.8em; margin-bottom:20px;">Identity verification required for reset.</p>
+            <div id="view-forgot" class="auth-view">
+                <h2 style="color:#ff0055; letter-spacing:3px;">RECOVERY</h2>
+                <p style="color:gray; font-size:0.9em; margin-bottom:20px;">
+                    Enter your registered email to request a reset link from Admin.
+                </p>
                 
                 <div class="input-group">
                     <label>REGISTERED EMAIL</label>
-                    <input type="email" id="f-email" placeholder="agent@nexus.com">
+                    <input type="email" id="forgot-email" placeholder="agent@nexus.com">
                 </div>
 
-                <button class="btn" style="border-color:#ff0055; color:#ff0055;" onclick="performResetRequest()">SEND REQUEST</button>
-                
-                <p style="margin-top:20px;"><span class="link" onclick="switchView('login-sec')">Cancel</span></p>
+                <button class="btn" style="border-color:#ff0055; color:#ff0055;" onclick="handleReset()">SEND REQUEST</button>
+
+                <p style="margin-top:25px;">
+                    <span class="switch-link" onclick="showView('view-login')">Cancel Operation</span>
+                </p>
             </div>
 
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // 1. View Switcher Logic
+        function showView(viewId) {
+            // Hide all views first
+            document.querySelectorAll('.auth-view').forEach(view => {
+                view.classList.remove('active-view');
+            });
+            // Show the specific view requested
+            document.getElementById(viewId).classList.add('active-view');
+        }
+
+        // 2. Login Logic
+        function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+
+            // Admin Check
+            if(email === "admin@nexus.com" && pass === "admin123") {
+                const adminUser = { email: email, telegram: "NexusAdmin", role: "admin" };
+                localStorage.setItem('nexus_user', JSON.stringify(adminUser));
+                window.location.href = "admin.html";
+                return;
+            }
+
+            // User Check
+            const users = JSON.parse(localStorage.getItem('nexus_db') || "[]");
+            const user = users.find(u => u.email === email && u.pass === pass);
+
+            if(user) {
+                localStorage.setItem('nexus_user', JSON.stringify(user));
+                window.location.href = "index.html";
+            } else {
+                alert("ACCESS DENIED: Invalid Credentials.");
+            }
+        }
+
+        // 3. Register Logic
+        function handleRegister() {
+            const email = document.getElementById('reg-email').value;
+            const tele = document.getElementById('reg-tele').value.replace('@','');
+            const pass = document.getElementById('reg-pass').value;
+
+            if(!email || !tele || !pass) return alert("Fill all fields");
+
+            const users = JSON.parse(localStorage.getItem('nexus_db') || "[]");
+            
+            if(users.find(u => u.email === email)) return alert("Email already registered.");
+
+            const newUser = { email: email, telegram: tele, pass: pass, role: 'user' };
+            users.push(newUser);
+            localStorage.setItem('nexus_db', JSON.stringify(users));
+            
+            // Auto Login
+            localStorage.setItem('nexus_user', JSON.stringify(newUser));
+            alert("IDENTITY VERIFIED. Welcome.");
+            window.location.href = "index.html";
+        }
+
+        // 4. Reset Logic
+        function handleReset() {
+            const email = document.getElementById('forgot-email').value;
+            if(!email) return alert("Enter Email");
+            
+            // Save request for Admin
+            const requests = JSON.parse(localStorage.getItem('nexus_reset_requests') || "[]");
+            requests.push({email: email, date: new Date().toLocaleDateString()});
+            localStorage.setItem('nexus_reset_requests', JSON.stringify(requests));
+
+            alert("REQUEST SENT. Admin will review.");
+            showView('view-login');
+        }
+    </script>
 </body>
 </html>
