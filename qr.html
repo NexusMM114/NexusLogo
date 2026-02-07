@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus | QR Art</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav>
+        <div class="brand" onclick="location.href='index.html'">NEXUS STUDIO</div>
+        <div class="nav-links">
+            <a href="logo.html">LOGOS</a>
+            <a href="qr.html" style="color:var(--neon-blue); text-shadow:0 0 10px var(--neon-blue);">QR ART</a>
+            <a href="login.html" id="nav-auth">LOGIN</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 style="border-left: 4px solid var(--neon-blue); padding-left: 15px; margin-bottom: 25px;">
+            QR COLLECTION <span style="font-size:0.6em; color:#888; margin-left:10px;">// FLAT ₹15</span>
+        </h2>
+        
+        <div class="grid" id="qr-grid">
+            </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // 1. List of your Google Drive Image IDs
+        const qrIds = [
+            "1z_dMjlBOuytoNwONO-CEQ-VlwNRv08jB", // Vortex QR
+            "1YV3twVhH109nY7tloC2xJwB2MNPalr0X", // Matrix QR
+            "1sHJloN37codYBBbf6kOXzMF4JS5UvTnz", // Cyber Scan
+            "1TIEdQ7fgFZwyVawNym2KiTLV19gWX5-P", // Glitch Gate
+            "15v_gaPAU3NWpsK0hPfdnH7wWS9DMSIh3", // Neon Link
+            "1KFvSQG84R94V-oscSkgxyw9_pGMHbLRr"  // Pulse Code
+        ];
+
+        // 2. Generate the HTML for each card
+        const gridContainer = document.getElementById('qr-grid');
+        
+        gridContainer.innerHTML = qrIds.map((id, index) => `
+            <div class="glass-panel card page-entry" style="border-color: rgba(0, 243, 255, 0.3);">
+                <div style="overflow:hidden; border-radius:10px; margin-bottom:10px;">
+                    <img src="https://drive.google.com/thumbnail?id=${id}" loading="lazy" alt="QR Asset">
+                </div>
+                <h3 style="font-size:1rem; margin:5px 0;">QR ART #${index + 1}</h3>
+                <p style="color:var(--neon-blue); font-weight:bold; font-size:0.9rem;">₹15 INR</p>
+                <button class="btn" style="border-color:var(--neon-blue); color:var(--neon-blue);" onclick="buyItem('QR Art #${index + 1}', 15)">
+                    ACQUIRE
+                </button>
+            </div>
+        `).join('');
+    </script>
+
+</body>
+</html>
