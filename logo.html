@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nexus | Logos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav><div class="brand" onclick="location.href='index.html'">NEXUS</div><div class="nav-links"><a href="logo.html" style="color:var(--neon-purple)">LOGOS</a><a href="qr.html">QRs</a><a href="login.html" id="nav-auth">LOGIN</a></div></nav>
+    <div class="container">
+        <h2 style="border-left: 4px solid var(--neon-purple); padding-left: 15px;">LOGO VAULT (₹20)</h2>
+        <div class="grid" id="logo-grid"></div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        const ids = ["1JWGYxoMn6cq0wG8z1rvejLHXJIt518-7","1PX3voz_QOMfxzObDYsDgq_e6ahF7Tw6i","1YlgTBlmedNDXqLF-FaWvYMu7JSKQb_J3","1Rfke6YZ1xqlDYkY_NxuCLeFWhfBSZqD7","1_8BeyKLtRexUgWmg9ffbWDbmdmgLXHOh","1uBpqchVRhWv-AeVcuGuSUqqcRExq26xY","19MezfncVBHeXeTobxZfenhRzty7qhT-3","1LAnRd_AkSzOUhT879Hk1EIUARwMLLA8Z","1j7fOTqq4kSuWCJ2NR9ImWmcy-C-_ReDS","1kcU66rGLI6PxVlxcatt0B_hqi69mpdIr","1jwuJ_hGw0Q3tupZ2CnnP450pDsvLveNi","1xZzSe0_hT8Q8CUD9If2q3VA9aEvE_ZaK","1KCNxHjigvw_pQiJK4_aMTvX6Y0QiROik","1v_DUcEPF4H5LyK-ttaI5X6r3oZjml0aF","1HWu5eqyXJ3KjeNwdNVvzkWu15zjB7DnJ","1HAVGGaO5itHyDhcf8Ct3XNrwDyrLDu_n"];
+        document.getElementById('logo-grid').innerHTML = ids.map((id, i) => `
+            <div class="glass-panel card page-entry">
+                <img src="https://drive.google.com/thumbnail?id=${id}">
+                <h3>LOGO #${i+1}</h3>
+                <button class="btn" onclick="buyItem('Logo #${i+1}', 20)">ACQUIRE</button>
+            </div>
+        `).join('');
+    </script>
+</body>
+</html>
