@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nexus | Checkout</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" style="max-width:400px; margin: 40px auto;">
+        <div class="glass-panel page-entry" style="text-align:center;">
+            <h2 style="color:var(--neon-purple)">TRANSACTION</h2>
+            <p id="item-info">Item: --</p>
+            <div style="background:white; padding:10px; border-radius:10px; margin:20px 0;">
+                <p style="color:black; font-weight:bold; margin:0 0 10px 0;">UPI: lavyanshboss@fam</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=lavyanshboss@fam" style="width:150px">
+            </div>
+            <p id="user-info" style="color:var(--neon-blue)">Agent: --</p>
+            <input type="file">
+            <button class="btn pulse" onclick="pay()">COMPLETE</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        const cart = JSON.parse(localStorage.getItem('nexus_cart'));
+        const user = JSON.parse(localStorage.getItem('nexus_user'));
+        document.getElementById('item-info').innerText = `${cart.item} | ₹${cart.price}`;
+        document.getElementById('user-info').innerText = `Agent: @${user.telegram}`;
+
+        function pay() {
+            new Audio('google_pay.mp3').play().catch(() => {});
+            alert("PROOF UPLOADED. Reviewing ID: @"+user.telegram);
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
+
