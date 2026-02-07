@@ -1,30 +1,199 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Nexus | Admin</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS | COMMAND</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Admin Specific Styles */
+        body { background-color: #050505; color: white; }
+        
+        .admin-nav {
+            display: flex; justify-content: space-around; background: #111;
+            padding: 15px; border-bottom: 1px solid #333; position: sticky; top: 0;
+        }
+        .nav-item { color: #888; font-weight: bold; cursor: pointer; }
+        .active-nav { color: #00f3ff; text-shadow: 0 0 10px #00f3ff; }
+        
+        .section { display: none; padding: 20px; animation: fadeIn 0.5s; }
+        .active-section { display: block; }
+        
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+        /* Data Tables */
+        .data-card {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px; margin-bottom: 10px; border-radius: 8px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .data-info h4 { margin: 0; color: #fff; }
+        .data-info p { margin: 5px 0 0; font-size: 0.8em; color: #aaa; }
+        
+        .btn-action {
+            padding: 5px 10px; border: 1px solid; background: transparent;
+            cursor: pointer; font-size: 0.7em; font-weight: bold;
+        }
+        .btn-approve { border-color: lime; color: lime; }
+        .btn-reject { border-color: red; color: red; }
+        .btn-link { border-color: #bd00ff; color: #bd00ff; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>ADMIN CONSOLE</h1>
-        <div class="glass-panel">
-            <h3>USER DATABASE</h3>
-            <div id="admin-user-list"></div>
-        </div>
-        <br>
-        <button class="btn" onclick="logout()" style="max-width:200px;">TERMINATE ADMIN SESSION</button>
+
+    <div class="admin-nav">
+        <div class="nav-item active-nav" onclick="switchTab('tab-users', this)">👥 USERS</div>
+        <div class="nav-item" onclick="switchTab('tab-reqs', this)">🔑 REQUESTS</div>
+        <div class="nav-item" onclick="switchTab('tab-pays', this)">💸 PAYMENTS</div>
+        <div class="nav-item" style="color:red" onclick="logout()">LOGOUT</div>
     </div>
-    <script src="script.js"></script>
+
+    <div id="tab-users" class="section active-section">
+        <h2 style="color:#00f3ff">ACTIVE AGENTS</h2>
+        <div id="list-users">
+            </div>
+    </div>
+
+    <div id="tab-reqs" class="section">
+        <h2 style="color:#bd00ff">RESET REQUESTS</h2>
+        <div id="list-requests">
+            </div>
+    </div>
+
+    <div id="tab-pays" class="section">
+        <h2 style="color:lime">TRANSACTIONS</h2>
+        <div id="list-payments">
+            </div>
+    </div>
+
     <script>
-        function renderAdmin() {
-            const db = JSON.parse(localStorage.getItem('nexus_db') || "[]");
-            document.getElementById('admin-user-list').innerHTML = db.map(u => `
-                <div style="padding:10px; border-bottom:1px solid #222;">
-                    ${u.email} <b style="color:var(--neon-blue)">@${u.telegram}</b>
-                </div>
-            `).join('') || "No users registered.";
+        // --- 1. NAVIGATION LOGIC ---
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active-section'));
+            document.getElementById(tabId).classList.add('active-section');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
+            btn.classList.add('active-nav');
+            
+            refreshData(); // Reload data when switching tabs
         }
-        renderAdmin();
+
+        // --- 2. DATA LOADERS ---
+        function refreshData() {
+            renderUsers();
+            renderRequests();
+            renderPayments();
+        }
+
+        // A. Render Users
+        function renderUsers() {
+            const users = JSON.parse(localStorage.getItem('nexus_db') || "[]");
+            const container = document.getElementById('list-users');
+            
+            if(users.length === 0) {
+                container.innerHTML = "<p style='color:gray'>No registered users yet.</p>";
+                return;
+            }
+
+            container.innerHTML = users.map((u, index) => `
+                <div class="data-card">
+                    <div class="data-info">
+                        <h4>${u.email}</h4>
+                        <p>Handle: <span style="color:#00f3ff">@${u.telegram}</span> | Role: ${u.role}</p>
+                        <p>Pass: ${u.pass}</p> 
+                    </div>
+                    <button class="btn-action btn-reject" onclick="deleteUser(${index})">BAN</button>
+                </div>
+            `).join('');
+        }
+
+        // B. Render Password Requests
+        function renderRequests() {
+            const reqs = JSON.parse(localStorage.getItem('nexus_reset_requests') || "[]");
+            const container = document.getElementById('list-requests');
+
+            if(reqs.length === 0) {
+                container.innerHTML = "<p style='color:gray'>No pending reset requests.</p>";
+                return;
+            }
+
+            container.innerHTML = reqs.map((r, index) => `
+                <div class="data-card" style="border-color:#bd00ff">
+                    <div class="data-info">
+                        <h4>${r.email}</h4>
+                        <p>Date: ${r.date}</p>
+                    </div>
+                    <button class="btn-action btn-link" onclick="generateLink('${r.email}')">COPY LINK</button>
+                    <button class="btn-action btn-reject" onclick="deleteReq(${index})">X</button>
+                </div>
+            `).join('');
+        }
+
+        // C. Render Payments (NEW)
+        function renderPayments() {
+            // We look for 'nexus_orders'
+            const orders = JSON.parse(localStorage.getItem('nexus_orders') || "[]");
+            const container = document.getElementById('list-payments');
+
+            if(orders.length === 0) {
+                container.innerHTML = "<p style='color:gray'>No transactions found.</p>";
+                return;
+            }
+
+            container.innerHTML = orders.map((o, index) => `
+                <div class="data-card" style="border-color:lime">
+                    <div class="data-info">
+                        <h4>${o.item}</h4>
+                        <p style="color:lime">₹${o.price}</p>
+                        <p>User: @${o.user} | Status: ${o.status}</p>
+                    </div>
+                    ${o.status === 'PENDING' ? `
+                        <button class="btn-action btn-approve" onclick="updateOrderStatus(${index}, 'APPROVED')">✔</button>
+                    ` : `<span style="color:gray; font-size:0.8em">DONE</span>`}
+                </div>
+            `).join('');
+        }
+
+        // --- 3. ACTIONS ---
+
+        function deleteUser(index) {
+            if(confirm("Ban this user?")) {
+                let users = JSON.parse(localStorage.getItem('nexus_db'));
+                users.splice(index, 1);
+                localStorage.setItem('nexus_db', JSON.stringify(users));
+                refreshData();
+            }
+        }
+
+        function generateLink(email) {
+            const code = btoa(email); // Simple encoding
+            const link = `login.html?reset=${code}`;
+            navigator.clipboard.writeText(link);
+            alert("Reset Link Copied!\nSend this to user:\n" + link);
+        }
+
+        function deleteReq(index) {
+            let reqs = JSON.parse(localStorage.getItem('nexus_reset_requests'));
+            reqs.splice(index, 1);
+            localStorage.setItem('nexus_reset_requests', JSON.stringify(reqs));
+            refreshData();
+        }
+
+        function updateOrderStatus(index, newStatus) {
+            let orders = JSON.parse(localStorage.getItem('nexus_orders'));
+            orders[index].status = newStatus;
+            localStorage.setItem('nexus_orders', JSON.stringify(orders));
+            refreshData();
+        }
+
+        function logout() {
+            localStorage.removeItem('nexus_user'); // Clear session
+            window.location.href = "login.html";
+        }
+
+        // Initialize
+        refreshData();
     </script>
 </body>
 </html>
