@@ -39,8 +39,8 @@ function performLogin() {
     const pass = document.getElementById('l-pass').value.trim();
 
     // 1. Check Admin Hardcode
-    if (email === "admin@nexus.com" && pass === "admin123") {
-        const adminUser = { email: email, telegram: "NexusAdmin", role: "admin" };
+    if (email === "admin@nexuslogo.shop" && pass === "NexusAdmin12") {
+        const adminUser = { email: email, telegram: "NexusMM", role: "admin" };
         localStorage.setItem('nexus_user', JSON.stringify(adminUser));
         alert("ADMIN ACCESS GRANTED");
         window.location.href = "admin.html";
