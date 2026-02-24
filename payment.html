@@ -1,36 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nexus | Checkout</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body { background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=1920&auto=format&fit=crop'); }
+    </style>
 </head>
 <body>
-    <div class="container" style="max-width:400px; margin: 40px auto;">
-        <div class="glass-panel page-entry" style="text-align:center;">
-            <h2 style="color:var(--neon-purple)">TRANSACTION</h2>
-            <p id="item-info">Item: --</p>
-            <div style="background:white; padding:10px; border-radius:10px; margin:20px 0;">
-                <p style="color:black; font-weight:bold; margin:0 0 10px 0;">UPI: lavyanshboss@fam</p>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=lavyanshboss@fam" style="width:150px">
+    <div class="container" style="text-align:center; padding-top:40px;">
+        <div class="card" style="max-width:400px; margin:auto; background:rgba(0,0,0,0.85); padding:20px;">
+            <h2 style="color:var(--neon-purple); margin-top:0;">CONFIRM ORDER</h2>
+            <img id="c-img" style="width:100%; height:200px; object-fit:cover; border-radius:10px; margin-bottom:15px; border:1px solid #444;">
+            <p id="c-info" style="font-weight:bold; font-size:1.2rem;"></p>
+            
+            <div style="background:white; padding:15px; border-radius:8px; margin:15px 0;">
+                <p style="color:black; font-weight:900; margin:0 0 10px 0;">UPI: lavyanshboss@fam</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=lavyanshboss@fam" style="width:150px; border-radius:0;">
             </div>
-            <p id="user-info" style="color:var(--neon-blue)">Agent: --</p>
-            <input type="file">
-            <button class="btn pulse" onclick="pay()">COMPLETE</button>
+            
+            <p id="c-user" style="color:var(--neon-blue); font-weight:bold;"></p>
+            <button class="btn" style="background:var(--neon-purple); color:white; border:none; margin-top:10px;" onclick="pay()">SEND PROOF VIA TELEGRAM</button>
+            <p style="color:#aaa; font-size:0.8rem; margin-top:15px; cursor:pointer;" onclick="history.back()">Cancel</p>
         </div>
     </div>
+
     <script src="script.js"></script>
     <script>
         const cart = JSON.parse(localStorage.getItem('nexus_cart'));
         const user = JSON.parse(localStorage.getItem('nexus_user'));
-        document.getElementById('item-info').innerText = `${cart.item} | ₹${cart.price}`;
-        document.getElementById('user-info').innerText = `Agent: @${user.telegram}`;
+        
+        if(cart && user) {
+            document.getElementById('c-img').src = cart.img;
+            document.getElementById('c-info').innerText = `${cart.name} | ₹${cart.price}`;
+            document.getElementById('c-user').innerText = `Agent: @${user.telegram}`;
+        }
 
         function pay() {
-            new Audio('google_pay.mp3').play().catch(() => {});
-            alert("PROOF UPLOADED. Reviewing ID: @"+user.telegram);
-            window.location.href = "index.html";
+            let orders = JSON.parse(localStorage.getItem('nexus_orders') || "[]");
+            orders.push({name: cart.name, user: user.telegram, status: "PENDING"});
+            localStorage.setItem('nexus_orders', JSON.stringify(orders));
+
+            const adminTelegram = "NexusAdmin12"; // <-- CHANGE THIS
+            const msg = `🚀 *NEW ORDER* \n📦 Item: ${cart.name} \n💰 Price: ₹${cart.price} \n👤 User: @${user.telegram} \n\nPlease check my payment proof above!`;
+            
+            window.open(`https://t.me/${adminTelegram}?text=${encodeURIComponent(msg)}`, '_blank');
+            showToast("OPENING UPLINK...", "info"); 
+            setTimeout(() => window.location.href="index.html", 2000);
         }
     </script>
 </body>
 </html>
-
