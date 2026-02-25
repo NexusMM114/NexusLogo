@@ -4,94 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nexus | Command</title>
-    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        body { background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)), url('https://images.unsplash.com/photo-1510511459019-5dda7724fd87?q=80&w=1920&auto=format&fit=crop'); background-size: cover; }
-        .admin-nav { display: flex; overflow-x: auto; background: rgba(0,0,0,0.95); padding: 15px; border-bottom: 2px solid var(--neon-purple); white-space: nowrap; position: sticky; top: 0; z-index: 99; }
-        .nav-item { color: #888; margin-right: 20px; font-weight: bold; cursor: pointer; }
+        :root { --neon-purple: #bd00ff; --neon-blue: #00f3ff; --glass: rgba(10, 10, 10, 0.85); --success: #00ff66; }
+        * { box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+        body { margin: 0; color: white; background: linear-gradient(135deg, #050505 0%, #120024 100%); background-attachment: fixed; min-height: 100vh; }
+        .hidden { display: none !important; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; background: rgba(255,255,255,0.05); border: 1px solid #444; color: white; border-radius: 6px; outline: none; }
+        .btn { background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 12px; cursor: pointer; width: 100%; border-radius: 6px; font-weight: bold; transition: 0.3s; }
+        .btn:hover { background: var(--neon-blue); color: black; }
+        .admin-nav { display: flex; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--neon-purple); padding: 10px; overflow-x: auto; position: sticky; top:0; z-index: 100; }
+        .nav-item { padding: 10px 20px; color: #888; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
         .active-nav { color: var(--neon-blue); border-bottom: 2px solid var(--neon-blue); }
-        input, select { width: 100%; padding: 10px; margin: 5px 0; background: rgba(0,0,0,0.5); border: 1px solid #444; color: white; border-radius: 5px; }
-        .data-card { background: rgba(0,0,0,0.8); padding: 15px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #444; font-size: 0.9rem; }
-        label { color: var(--neon-purple); font-size: 0.8rem; font-weight: bold; }
+        .container { padding: 20px; max-width: 800px; margin: 0 auto; }
+        .data-card { background: rgba(0,0,0,0.6); border: 1px solid #333; padding: 15px; border-radius: 8px; margin-bottom: 10px; }
+        #toast-container { position: fixed; bottom: 20px; left: 20px; right: 20px; z-index: 999; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: #000; border-left: 4px solid var(--neon-blue); padding: 15px; border-radius: 4px; display: flex; align-items: center; gap: 12px; animation: slideIn 0.3s ease; pointer-events: auto; }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .success-checkmark { width: 25px; height: 25px; stroke: var(--success); stroke-width: 4; fill: none; }
+        .success-checkmark__circle { stroke-dasharray: 166; stroke-dashoffset: 166; animation: stroke 0.6s forwards; stroke: var(--success); }
+        .success-checkmark__check { stroke-dasharray: 48; stroke-dashoffset: 48; animation: stroke 0.3s 0.5s forwards; }
+        @keyframes stroke { 100% { stroke-dashoffset: 0; } }
     </style>
 </head>
 <body>
-    <div class="admin-nav">
-        <div class="nav-item active-nav" onclick="tab('up',this)">📤 UPLOAD</div>
-        <div class="nav-item" onclick="tab('prod',this)">📦 GALLERY</div>
-        <div class="nav-item" onclick="tab('req',this)">🔑 RESETS</div>
-        <div class="nav-item" onclick="tab('pay',this)">💸 PAYMENTS</div>
-        <div class="nav-item" style="color:#ff0055" onclick="location.href='login.html'">LOGOUT</div>
-    </div>
+    <div id="toast-container"></div>
 
-    <div id="up" class="container">
-        <div class="data-card">
-            <h3 style="color:var(--neon-blue); margin-top:0;">BRAND SETTINGS</h3>
-            <input type="text" id="set-pfp" placeholder="Admin PFP Image Link">
-            <button class="btn" onclick="saveSet()">UPDATE PFP</button>
-
-            <h3 style="color:var(--neon-purple); border-top:1px solid #444; padding-top:20px;">UPLOAD PRODUCT</h3>
-            <label>CATEGORY</label>
-            <select id="p-type"><option value="logo">Logo</option><option value="qr">QR</option><option value="sticker">Sticker</option></select>
-            <label>NAME</label><input type="text" id="p-name" placeholder="Item Name">
-            <label>PRICE (₹)</label><input type="number" id="p-price" placeholder="Price">
-            <label style="color:var(--neon-blue);">UPLOAD FROM GALLERY</label>
-            <input type="file" id="p-file" accept="image/*" style="padding:5px;">
-            <p style="font-size:0.7rem; color:gray; margin:0;">OR PASTE IMAGE LINK</p>
-            <input type="text" id="p-img" placeholder="https://...">
-            <button class="btn" style="border-color:var(--neon-purple); color:var(--neon-purple); margin-top:15px;" onclick="processUpload()">UPLOAD TO SHOP</button>
+    <div id="firewall-ui" style="display:flex; justify-content:center; align-items:center; min-height:100vh;">
+        <div class="data-card" style="width:350px; text-align:center; border-color:#ff0055;">
+            <i class='bx bxs-lock-alt' style='font-size:3rem; color:#ff0055;'></i>
+            <h2>SECURE LOGIN</h2>
+            <input type="email" id="adm-email" placeholder="Admin Email">
+            <input type="password" id="adm-pass" placeholder="Password">
+            <input type="number" id="adm-code" placeholder="10-Digit Code">
+            <button class="btn" onclick="verifyAdmin()">AUTHORIZE</button>
         </div>
     </div>
 
-    <div id="prod" class="container hidden"></div>
-    <div id="req" class="container hidden"></div>
-    <div id="pay" class="container hidden"></div>
+    <div id="admin-ui" class="hidden">
+        <div class="admin-nav">
+            <div class="nav-item active-nav" onclick="tab('up',this)"><i class='bx bx-plus-circle'></i> UPLOAD</div>
+            <div class="nav-item" onclick="tab('ads',this)"><i class='bx bx-broadcast'></i> ADS</div>
+            <div class="nav-item" style="color:#ff0055" onclick="location.reload()"><i class='bx bx-log-out'></i> EXIT</div>
+        </div>
 
-    <script src="script.js"></script>
+        <div id="up" class="container">
+            <div class="data-card">
+                <h3>POST NEW ASSET</h3>
+                <input type="text" id="p-name" placeholder="Item Name">
+                <input type="number" id="p-price" placeholder="Price (₹)">
+                <input type="text" id="p-img" placeholder="Image URL">
+                <button class="btn" onclick="uploadProduct()">PUSH TO VAULT</button>
+            </div>
+        </div>
+
+        <div id="ads" class="container hidden">
+            <div class="data-card">
+                <h3><i class='bx bx-code-alt'></i> AD SCRIPT DEPLOYER</h3>
+                <textarea id="ad-code-input" rows="8" placeholder="Paste AdSense or Adsterra code here..."></textarea>
+                <button class="btn" onclick="saveAd()">DEPLOY AD STREAM</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function tab(id, btn) { ['up','prod','req','pay'].forEach(x => document.getElementById(x).classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active-nav')); btn.classList.add('active-nav'); refresh(); }
-        
-        function saveSet() { localStorage.setItem('nexus_settings', JSON.stringify({pfp: document.getElementById('set-pfp').value})); alert("Updated!"); location.reload(); }
-        
-        function processUpload() {
-            const fileInput = document.getElementById('p-file'); const urlInput = document.getElementById('p-img').value;
-            const name = document.getElementById('p-name').value; const price = document.getElementById('p-price').value; const type = document.getElementById('p-type').value;
-            if (!name || !price) return alert("Enter Name and Price");
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) { saveToStore(type, name, price, e.target.result); };
-                reader.readAsDataURL(fileInput.files[0]);
-            } else if (urlInput) { saveToStore(type, name, price, urlInput); } else { alert("Select a file or paste a link."); }
-        }
-        function saveToStore(type, name, price, imgData) {
-            let items = JSON.parse(localStorage.getItem('nexus_products') || "[]");
-            items.push({id: Date.now(), type, name, price, img: imgData});
-            localStorage.setItem('nexus_products', JSON.stringify(items));
-            alert("UPLOADED SUCCESSFULLY!");
-            document.getElementById('p-name').value = ""; document.getElementById('p-price').value = ""; document.getElementById('p-file').value = ""; document.getElementById('p-img').value = ""; refresh();
+        function verifyAdmin() {
+            const e = document.getElementById('adm-email').value;
+            const p = document.getElementById('adm-pass').value;
+            const c = document.getElementById('adm-code').value;
+            const realCode = localStorage.getItem('nexus_admin_code');
+            if(e === "admin@nexuslogo.shop" && p === "admin123" && c === realCode && realCode) {
+                localStorage.setItem('nexus_user', JSON.stringify({role:'admin'}));
+                localStorage.removeItem('nexus_admin_code');
+                showToast("ACCESS GRANTED", "success");
+                setTimeout(() => { document.getElementById('firewall-ui').style.display='none'; document.getElementById('admin-ui').classList.remove('hidden'); }, 1000);
+            } else { showToast("AUTH FAILURE", "error"); }
         }
 
-        function refresh() {
-            const items = JSON.parse(localStorage.getItem('nexus_products') || "[]");
-            document.getElementById('prod').innerHTML = items.map(x => `<div class="data-card" style="display:flex; gap:10px; align-items:center;"><img src="${x.img}" style="width:40px; height:40px; border-radius:5px; object-fit:cover;"> <div style="flex:1;"><b>${x.name}</b> (₹${x.price})<br><small>${x.type.toUpperCase()}</small></div> <button style="color:#ff0055; background:none; border:none; font-weight:bold; cursor:pointer;" onclick="delP(${x.id})">DEL</button></div>`).join('') || "<p>No Products</p>";
-
-            const reqs = JSON.parse(localStorage.getItem('nexus_reset_reqs') || "[]");
-            document.getElementById('req').innerHTML = reqs.map((x,i) => `<div class="data-card"><b>${x.email}</b><br><small>${x.date}</small><div style="margin-top:10px;"><button class="btn" style="padding:5px; width:auto; display:inline-block;" onclick="generateLink('${x.email}')">COPY LINK</button> <button class="btn" style="border-color:#ff0055; color:#ff0055; padding:5px; width:auto; display:inline-block;" onclick="delReq(${i})">DELETE</button></div></div>`).join('') || "<p>No Requests</p>";
-
-            const pays = JSON.parse(localStorage.getItem('nexus_orders') || "[]");
-            document.getElementById('pay').innerHTML = pays.map((x,i) => `<div class="data-card"><b>${x.name}</b> - @${x.user} <br>Status: <span style="color:${x.status=='PENDING'?'yellow':'lime'}">${x.status}</span> ${x.status=='PENDING' ? `<button class="btn" style="border-color:lime; color:lime; padding:5px; float:right; width:auto;" onclick="approve(${i})">APPROVE</button>` : ''}</div>`).join('') || "<p>No Orders</p>";
+        function saveAd() {
+            localStorage.setItem('nexus_ad_script', document.getElementById('ad-code-input').value);
+            showToast("ADS UPDATED", "success");
         }
 
-        function generateLink(email) {
-            const code = btoa(email); 
-            const baseUrl = window.location.href.replace('admin.html', 'login.html');
-            navigator.clipboard.writeText(baseUrl + "?reset=" + code).then(() => alert("✅ LINK COPIED!\n\nPaste in Telegram."));
+        function uploadProduct() {
+            let p = JSON.parse(localStorage.getItem('nexus_products') || "[]");
+            p.push({name:document.getElementById('p-name').value, price:document.getElementById('p-price').value, img:document.getElementById('p-img').value});
+            localStorage.setItem('nexus_products', JSON.stringify(p));
+            showToast("ITEM UPLOADED", "success");
         }
 
-        function delP(id) { let items = JSON.parse(localStorage.getItem('nexus_products')); localStorage.setItem('nexus_products', JSON.stringify(items.filter(x => x.id != id))); refresh(); }
-        function delReq(i) { let d=JSON.parse(localStorage.getItem('nexus_reset_reqs')); d.splice(i,1); localStorage.setItem('nexus_reset_reqs', JSON.stringify(d)); refresh(); }
-        function approve(i) { let d=JSON.parse(localStorage.getItem('nexus_orders')); d[i].status="APPROVED"; localStorage.setItem('nexus_orders', JSON.stringify(d)); refresh(); }
-        refresh();
+        function tab(id, btn) {
+            ['up','ads'].forEach(t => document.getElementById(t).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
+            btn.classList.add('active-nav');
+        }
+
+        function showToast(msg, type) {
+            const container = document.getElementById('toast-container');
+            const box = document.createElement('div');
+            box.className = `toast`;
+            let icon = (type === 'success') ? `<svg class="success-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="success-checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="success-checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>` : `<i class='bx bxs-x-circle' style='color:#ff0055; font-size:1.5rem;'></i>`;
+            box.innerHTML = `${icon} <span>${msg}</span>`;
+            container.appendChild(box);
+            setTimeout(() => box.remove(), 3000);
+        }
     </script>
 </body>
 </html>
