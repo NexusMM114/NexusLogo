@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus | Keygen</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root { --neon-purple: #bd00ff; --neon-blue: #00f3ff; --glass: rgba(10, 10, 10, 0.8); }
+        * { box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+        body { margin: 0; background: linear-gradient(135deg, #050505 0%, #120024 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; color: white; }
+        .card { background: var(--glass); border: 1px solid var(--neon-blue); border-radius: 15px; padding: 30px; text-align: center; backdrop-filter: blur(10px); width: 90%; max-width: 400px; box-shadow: 0 0 20px rgba(0, 243, 255, 0.2); }
+        .code-box { background: rgba(0,0,0,0.5); border: 1px dashed var(--neon-blue); padding: 20px; border-radius: 8px; margin: 20px 0; font-size: 2rem; color: var(--neon-blue); letter-spacing: 5px; font-weight: bold; }
+        .btn { background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 12px; cursor: pointer; text-transform: uppercase; font-weight: bold; width: 100%; border-radius: 6px; transition: 0.3s; }
+        .btn:hover { background: var(--neon-blue); color: black; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <i class='bx bxs-key' style='font-size: 3rem; color: var(--neon-purple);'></i>
+        <h2>UPLINK GENERATOR</h2>
+        <div class="code-box" id="code-display">**********</div>
+        <button class="btn" onclick="generateCode()">Generate Admin Key</button>
+    </div>
+    <script>
+        function generateCode() {
+            const code = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+            localStorage.setItem('nexus_admin_code', code);
+            document.getElementById('code-display').innerText = code;
+        }
+    </script>
+</body>
+</html>
