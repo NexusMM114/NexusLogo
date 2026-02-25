@@ -3,52 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nexus | Checkout</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Nexus | Secure Checkout</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        body { background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=1920&auto=format&fit=crop'); }
+        :root { --neon-purple: #bd00ff; --neon-blue: #00f3ff; --success: #00ff66; --glass: rgba(10, 10, 10, 0.9); }
+        * { box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+        body { margin: 0; color: white; background: linear-gradient(135deg, #050505 0%, #120024 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        
+        .card { background: var(--glass); border: 1px solid rgba(0, 243, 255, 0.2); border-radius: 15px; padding: 25px; width: 100%; max-width: 420px; text-align: center; backdrop-filter: blur(10px); box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .item-preview { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; margin: 0 auto 10px; border: 2px solid var(--neon-blue); }
+        
+        /* Refund Input Styling */
+        .refund-box { background: rgba(255, 0, 85, 0.1); border: 1px solid #ff0055; border-radius: 8px; padding: 15px; margin: 15px 0; text-align: left; }
+        .refund-box label { font-size: 0.7rem; font-weight: bold; color: #ff0055; text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .refund-box input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid #444; color: white; padding: 10px; border-radius: 5px; outline: none; font-size: 0.9rem; }
+        .refund-box input:focus { border-color: #ff0055; }
+
+        .payment-box { background: white; padding: 12px; border-radius: 10px; margin: 10px 0; color: black; position: relative; }
+        .payment-label { background: var(--neon-blue); color: black; font-size: 0.65rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+        .upi-id { font-weight: 900; font-size: 0.8rem; display: block; margin-bottom: 5px; }
+        
+        .btn { background: transparent; border: 1px solid var(--neon-purple); color: var(--neon-purple); padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn:hover { background: var(--neon-purple); color: white; }
+
+        /* Animation */
+        .success-wrapper { display: none; margin-bottom: 10px; }
+        .success-checkmark { width: 40px; height: 40px; stroke: var(--success); stroke-width: 4; fill: none; margin: 0 auto; }
+        .success-checkmark__circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke: var(--success); fill: none; animation: stroke 0.6s forwards; }
+        .success-checkmark__check { stroke-dasharray: 48; stroke-dashoffset: 48; animation: stroke 0.3s 0.5s forwards; }
+        @keyframes stroke { 100% { stroke-dashoffset: 0; } }
     </style>
 </head>
 <body>
-    <div class="container" style="text-align:center; padding-top:40px;">
-        <div class="card" style="max-width:400px; margin:auto; background:rgba(0,0,0,0.85); padding:20px;">
-            <h2 style="color:var(--neon-purple); margin-top:0;">CONFIRM ORDER</h2>
-            <img id="c-img" style="width:100%; height:200px; object-fit:cover; border-radius:10px; margin-bottom:15px; border:1px solid #444;">
-            <p id="c-info" style="font-weight:bold; font-size:1.2rem;"></p>
-            
-            <div style="background:white; padding:15px; border-radius:8px; margin:15px 0;">
-                <p style="color:black; font-weight:900; margin:0 0 10px 0;">UPI: lavyanshboss@fam</p>
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=lavyanshboss@fam" style="width:150px; border-radius:0;">
-            </div>
-            
-            <p id="c-user" style="color:var(--neon-blue); font-weight:bold;"></p>
-            <button class="btn" style="background:var(--neon-purple); color:white; border:none; margin-top:10px;" onclick="pay()">SEND PROOF VIA TELEGRAM</button>
-            <p style="color:#aaa; font-size:0.8rem; margin-top:15px; cursor:pointer;" onclick="history.back()">Cancel</p>
+
+    <div class="card">
+        <div id="success-anim" class="success-wrapper">
+            <svg class="success-checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="success-checkmark__circle" cx="26" cy="26" r="25"/>
+                <path class="success-checkmark__check" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
         </div>
+
+        <img id="cart-img" class="item-preview" src="">
+        <h3 id="cart-details" style="margin:0; color:var(--neon-blue); font-size:1.1rem;"></h3>
+        
+        <div class="refund-box">
+            <label><i class='bx bx-shield-quarter'></i> Refund Protection Active</label>
+            <input type="text" id="user-refund-upi" placeholder="Enter YOUR UPI for potential refund">
+            <p style="font-size: 0.6rem; color: #aaa; margin: 5px 0 0 0;">In case of delivery failure, money returns here.</p>
+        </div>
+
+        <div class="payment-box">
+            <span class="payment-label">SECURE PAYMENT GATEWAY</span>
+            <span class="upi-id">UPI: lavyanshboss@fam</span>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=upi://pay?pa=lavyanshboss@fam" style="width:100px;">
+        </div>
+
+        <button class="btn" id="pay-btn" onclick="executePayment()">
+            <i class='bx bxl-telegram'></i> SUBMIT PROOF & UPI
+        </button>
+        
+        <p style="margin-top:15px; font-size:0.7rem; color:#666; cursor:pointer;" onclick="history.back()">Abort Transaction</p>
     </div>
 
-    <script src="script.js"></script>
     <script>
         const cart = JSON.parse(localStorage.getItem('nexus_cart'));
         const user = JSON.parse(localStorage.getItem('nexus_user'));
-        
-        if(cart && user) {
-            document.getElementById('c-img').src = cart.img;
-            document.getElementById('c-info').innerText = `${cart.name} | ₹${cart.price}`;
-            document.getElementById('c-user').innerText = `Agent: @${user.telegram}`;
+
+        if (!user || !cart) {
+            window.location.replace("index.html");
+        } else {
+            document.getElementById('cart-img').src = cart.img;
+            document.getElementById('cart-details').innerText = `${cart.name} - ₹${cart.price}`;
         }
 
-        function pay() {
-            let orders = JSON.parse(localStorage.getItem('nexus_orders') || "[]");
-            orders.push({name: cart.name, user: user.telegram, status: "PENDING"});
-            localStorage.setItem('nexus_orders', JSON.stringify(orders));
-
-            const adminTelegram = "NexusAdmin12"; // <-- CHANGE THIS
-            const msg = `🚀 *NEW ORDER* \n📦 Item: ${cart.name} \n💰 Price: ₹${cart.price} \n👤 User: @${user.telegram} \n\nPlease check my payment proof above!`;
+        function executePayment() {
+            const refundUPI = document.getElementById('user-refund-upi').value.trim();
             
-            window.open(`https://t.me/${adminTelegram}?text=${encodeURIComponent(msg)}`, '_blank');
-            showToast("OPENING UPLINK...", "info"); 
-            setTimeout(() => window.location.href="index.html", 2000);
+            if(!refundUPI) {
+                alert("Please enter your UPI ID for Refund Protection!");
+                return;
+            }
+
+            document.getElementById('success-anim').style.display = 'block';
+            document.getElementById('pay-btn').innerHTML = "ENCRYPTING DATA...";
+            document.getElementById('pay-btn').disabled = true;
+
+            const adminTelegram = "NexusMm"; 
+            const msg = `🚀 *NEW SECURED ORDER* \n\n📦 ITEM: ${cart.name} \n💰 PRICE: ₹${cart.price} \n👤 USER: @${user.telegram} \n\n🛡️ *REFUND UPI:* ${refundUPI} \n\n_User is sending proof now._`;
+            
+            setTimeout(() => {
+                window.open(`https://t.me/${adminTelegram}?text=${encodeURIComponent(msg)}`, '_blank');
+                localStorage.removeItem('nexus_cart');
+                window.location.href="index.html";
+            }, 1500);
         }
     </script>
 </body>
