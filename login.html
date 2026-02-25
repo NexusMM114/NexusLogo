@@ -2,109 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nexus | Access</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus | Login</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .glass-panel { width: 90%; max-width: 350px; text-align: center; background: rgba(0, 0, 0, 0.85); border: 1px solid var(--neon-blue); border-radius: 12px; padding: 25px; backdrop-filter: blur(10px); }
-        input { width: 100%; padding: 14px; margin: 8px 0; background: rgba(255,255,255,0.05); border: 1px solid #444; color: white; border-radius: 8px; box-sizing: border-box; }
-        input:focus { border-color: var(--neon-blue); outline: none; }
-        .link { color: var(--neon-blue); text-decoration: underline; font-size: 0.85rem; cursor: pointer; font-weight: bold; }
+        :root { --neon-purple: #bd00ff; --neon-blue: #00f3ff; }
+        * { box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+        body { margin: 0; background: #050505; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: white; }
+        .card { background: rgba(10,10,10,0.9); border: 1px solid var(--neon-blue); padding: 30px; border-radius: 12px; width: 90%; max-width: 350px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: rgba(255,255,255,0.05); border: 1px solid #444; color: white; border-radius: 6px; outline: none; }
+        .btn { background: var(--neon-blue); color: black; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-    <div id="toast-container"></div>
-    <div class="glass-panel">
-        
-        <div id="v-login">
-            <h2 style="color:var(--neon-blue); letter-spacing:2px; text-shadow: 0 0 10px var(--neon-blue);">SYSTEM ACCESS</h2>
-            <input type="email" id="l-email" placeholder="Email">
-            <input type="password" id="l-pass" placeholder="Password">
-            <button class="btn" style="background:var(--neon-blue); color:black; margin-top:10px;" onclick="doLogin()">INITIALIZE</button>
-            <p style="margin-top:20px; font-size:0.85rem; color:#ccc;">New Agent? <span class="link" onclick="switchV('v-reg')">Create ID</span> | <span class="link" onclick="switchV('v-forgot')">Forgot?</span></p>
-        </div>
-
-        <div id="v-reg" class="hidden">
-            <h2 style="color:var(--neon-purple); letter-spacing:2px;">NEW IDENTITY</h2>
-            <input type="email" id="r-email" placeholder="Email">
-            <input type="text" id="r-tele" placeholder="Telegram @user">
-            <input type="password" id="r-pass" placeholder="Password">
-            <button class="btn" style="border-color:var(--neon-purple); color:var(--neon-purple); margin-top:10px;" onclick="doReg()">REGISTER</button>
-            <p onclick="switchV('v-login')" class="link" style="margin-top:15px; display:inline-block;">Abort</p>
-        </div>
-
-        <div id="v-forgot" class="hidden">
-            <h2 style="color:#ff0055;">RECOVERY</h2>
-            <p style="color:#ccc; font-size:0.85rem;">Enter email to request an uplink via Telegram.</p>
-            <input type="email" id="f-email" placeholder="Registered Email">
-            <button class="btn" style="border-color:#ff0055; color:#ff0055; margin-top:10px;" onclick="doReset()">SEND REQUEST</button>
-            <p onclick="switchV('v-login')" class="link" style="margin-top:15px; display:inline-block; color:#aaa;">Cancel</p>
-        </div>
-
-        <div id="v-newpass" class="hidden">
-            <h2 style="color:lime; letter-spacing:2px;">RESET PASS</h2>
-            <input type="email" id="np-email" readonly style="color:gray; background:rgba(0,0,0,0.5);">
-            <input type="password" id="np-pass" placeholder="Enter New Password">
-            <button class="btn" style="border-color:lime; color:lime; margin-top:10px;" onclick="saveNewPassword()">SAVE PASSWORD</button>
-        </div>
+    <div class="card">
+        <h2 style="color:var(--neon-blue)">AGENT LOGIN</h2>
+        <input type="email" id="e" placeholder="Email">
+        <input type="password" id="p" placeholder="Password">
+        <button class="btn" onclick="login()">INITIALIZE</button>
+        <p style="font-size:0.8rem; margin-top:15px; color:#aaa;">New? <span style="color:var(--neon-blue); cursor:pointer;" onclick="reg()">Create ID</span> | <span style="color:#ff0055; cursor:pointer;" onclick="forget()">Forgot?</span></p>
     </div>
-
-    <script src="script.js"></script>
     <script>
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('reset')) {
-                try { document.getElementById('np-email').value = atob(urlParams.get('reset')); switchV('v-newpass'); } 
-                catch(e) { showToast("INVALID RESET LINK", "error"); }
-            }
-        };
-
-        function switchV(id) { ['v-login','v-reg','v-forgot','v-newpass'].forEach(v => document.getElementById(v).classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
-
-        function doLogin() {
-            const e = document.getElementById('l-email').value.trim(); const p = document.getElementById('l-pass').value.trim();
-            if(!e || !p) return showToast("Enter Credentials", "error");
-            if(e === "admin@nexuslogo.shop" && p === "admin123") {
-                localStorage.setItem('nexus_user', JSON.stringify({email:e, telegram:"NexusAdmin", role:"admin"}));
-                showToast("COMMAND ACCESS GRANTED", "info"); setTimeout(() => window.location.href="admin.html", 1500);
+        function login() {
+            const email = document.getElementById('e').value;
+            const pass = document.getElementById('p').value;
+            if(email === "admin@nexuslogo.shop" && pass === "admin123") {
+                localStorage.setItem('nexus_user', JSON.stringify({role:'admin'}));
+                location.href = "admin.html";
             } else {
-                const users = JSON.parse(localStorage.getItem('nexus_db') || "[]");
-                const u = users.find(x => x.email === e && x.pass === p);
-                if(u) { localStorage.setItem('nexus_user', JSON.stringify(u)); showToast("ACCESS GRANTED"); setTimeout(() => window.location.href="index.html", 1500); }
-                else { showToast("ACCESS DENIED", "error"); }
+                const db = JSON.parse(localStorage.getItem('nexus_db') || "[]");
+                const u = db.find(x => x.email === email && x.pass === pass);
+                if(u) { localStorage.setItem('nexus_user', JSON.stringify(u)); location.href="index.html"; } else { alert("ACCESS DENIED"); }
             }
         }
-
-        function doReg() {
-            const e = document.getElementById('r-email').value.trim(); const t = document.getElementById('r-tele').value.trim().replace('@',''); const p = document.getElementById('r-pass').value.trim();
-            if(!e || !t || !p) return showToast("Fill All Fields", "error");
-            let users = JSON.parse(localStorage.getItem('nexus_db') || "[]");
-            if(users.find(x => x.email === e)) return showToast("Email Taken", "error");
-            users.push({email:e, telegram:t, pass:p, role:'user'}); localStorage.setItem('nexus_db', JSON.stringify(users));
-            showToast("IDENTITY CREATED!"); switchV('v-login'); document.getElementById('l-email').value = e;
+        function reg() { 
+            const email = prompt("Enter Email:"); const tele = prompt("Enter Telegram @:"); const pass = prompt("Enter Pass:");
+            if(email && tele && pass) {
+                let db = JSON.parse(localStorage.getItem('nexus_db') || "[]");
+                db.push({email, telegram: tele.replace('@',''), pass, role:'user'});
+                localStorage.setItem('nexus_db', JSON.stringify(db)); alert("ID CREATED");
+            }
         }
-
-        function doReset() {
-            const e = document.getElementById('f-email').value.trim();
-            if(!e) return showToast("Please enter email", "error");
-            let reqs = JSON.parse(localStorage.getItem('nexus_reset_reqs') || "[]");
-            reqs.push({email:e, date: new Date().toLocaleTimeString()});
-            localStorage.setItem('nexus_reset_reqs', JSON.stringify(reqs));
-            const adminTelegram = "NexusAdmin12"; // <-- YOUR TELEGRAM
-            window.open(`https://t.me/${adminTelegram}?text=${encodeURIComponent(`🔑 *PASSWORD RESET REQUEST* \n\n📧 Email: ${e}`)}`, '_blank');
-            showToast("OPENING UPLINK...", "info"); setTimeout(() => { switchV('v-login'); document.getElementById('f-email').value = ""; }, 1000);
-        }
-
-        function saveNewPassword() {
-            const e = document.getElementById('np-email').value; const p = document.getElementById('np-pass').value.trim();
-            if (!p) return showToast("Enter a new password!", "error");
-            let users = JSON.parse(localStorage.getItem('nexus_db') || "[]");
-            let i = users.findIndex(x => x.email === e);
-            if (i > -1) {
-                users[i].pass = p; localStorage.setItem('nexus_db', JSON.stringify(users));
-                showToast("PASSWORD UPDATED!", "success"); setTimeout(() => window.location.href = "login.html", 2000);
-            } else { showToast("Account not found.", "error"); }
+        function forget() {
+            const email = prompt("Enter your registered email:");
+            if(email) { window.open(`https://t.me/NexusmM?text=🔑 RESET REQUEST: ${email}`, '_blank'); }
         }
     </script>
 </body>
