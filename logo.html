@@ -2,36 +2,64 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus | Logos</title>
-    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        body { background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1920&auto=format&fit=crop'); }
+        :root { --neon-purple: #bd00ff; --neon-blue: #00f3ff; --glass: rgba(10, 10, 10, 0.7); }
+        * { box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
+        body { margin: 0; background: #050505; color: white; background: radial-gradient(circle at top left, #120024 0%, #050505 100%); min-height: 100vh; }
+        nav { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid var(--neon-purple); background: rgba(0,0,0,0.8); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
+        .card { background: var(--glass); border: 1px solid rgba(0, 243, 255, 0.2); border-radius: 12px; padding: 10px; text-align: center; }
+        .card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
+        .ads-container { width: 100%; margin: 20px 0; padding: 10px; background: rgba(0, 243, 255, 0.05); border: 1px dashed var(--neon-blue); border-radius: 8px; text-align: center; }
+        .btn { background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 8px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top:10px; }
     </style>
 </head>
 <body>
     <nav>
-        <div class="brand" onclick="location.href='index.html'">NEXUS</div>
-        <div class="nav-links"><a href="logo.html" style="color:var(--neon-blue);">LOGOS</a><a href="qr.html">QR</a><a href="sticker.html">STICKERS</a></div>
+        <div style="font-weight: 800; color: var(--neon-blue); letter-spacing: 2px;">NEXUS VAULT</div>
+        <div onclick="location.href='index.html'"><i class='bx bx-home-alt' style="font-size: 1.5rem;"></i></div>
     </nav>
-    <div class="container">
-        <h2 style="border-left:4px solid var(--neon-blue); padding-left:15px; color:white;">LOGO VAULT</h2>
-        <div class="grid" id="grid"></div>
-    </div>
-    
-    <script src="script.js"></script>
-    <script>
-        const products = JSON.parse(localStorage.getItem('nexus_products') || "[]");
-        const items = products.filter(p => p.type === 'logo'); // CHANGE THIS FOR QR/STICKERS
 
-        document.getElementById('grid').innerHTML = items.map(p => `
+    <div class="container" id="ad-zone" style="display:none; padding: 0 20px;">
+        <div class="ads-container">
+            <small style="color:var(--neon-blue); display:block; margin-bottom:5px;">SPONSORED</small>
+            <div id="ad-injector"></div>
+        </div>
+    </div>
+
+    <div class="grid" id="main-grid"></div>
+
+    <script>
+        const logos = [
+            { name: 'Prime', price: 15, img: 'https://i.ibb.co/99vKNnF0/IMG-20260103-144325.png' },
+            { name: 'Core', price: 20, img: 'https://i.ibb.co/LzXn9xbV/IMG-20260103-15154031.jpg' }
+            // ... (Add all your 17 links here)
+        ];
+
+        document.getElementById('main-grid').innerHTML = logos.map(l => `
             <div class="card">
-                <img src="${p.img}" loading="lazy">
-                <h3>${p.name}</h3>
-                <p style="color:var(--neon-purple); font-weight:bold; margin:5px 0 10px 0;">₹${p.price}</p>
-                <button class="btn" onclick="buyItem('${p.name}', ${p.price}, '${p.img}')">ACQUIRE</button>
+                <img src="${l.img}">
+                <div style="font-weight:bold; margin:5px 0;">${l.name}</div>
+                <div style="color:var(--neon-purple);">₹${l.price}</div>
+                <button class="btn" onclick="buy('${l.name}', ${l.price}, '${l.img}')"><i class='bx bx-cart-add'></i> BUY</button>
             </div>
-        `).join('') || "<p style='color:#ccc;'>Vault Empty. Admin upload required.</p>";
+        `).join('');
+
+        function buy(n,p,i) { localStorage.setItem('nexus_cart', JSON.stringify({name:n,price:p,img:i})); location.href='payment.html'; }
+
+        // AD LOADING LOGIC
+        window.onload = () => {
+            const script = localStorage.getItem('nexus_ad_script');
+            if(script) {
+                document.getElementById('ad-zone').style.display = 'block';
+                document.getElementById('ad-injector').innerHTML = script;
+                const scripts = document.getElementById('ad-injector').getElementsByTagName('script');
+                for (let i = 0; i < scripts.length; i++) { eval(scripts[i].innerText); }
+            }
+        };
     </script>
 </body>
 </html>
