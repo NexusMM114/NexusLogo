@@ -2,60 +2,110 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus | Logos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nexus | Logo Vault</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         :root { --neon-purple: #bd00ff; --neon-blue: #00f3ff; --glass: rgba(10, 10, 10, 0.7); }
-        * { box-sizing: border-box; font-family: 'Rajdhani', sans-serif; }
-        body { margin: 0; background: #050505; color: white; background: radial-gradient(circle at top left, #120024 0%, #050505 100%); min-height: 100vh; }
-        nav { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid var(--neon-purple); background: rgba(0,0,0,0.8); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
-        .card { background: var(--glass); border: 1px solid rgba(0, 243, 255, 0.2); border-radius: 12px; padding: 10px; text-align: center; }
-        .card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
-        .ads-container { width: 100%; margin: 20px 0; padding: 10px; background: rgba(0, 243, 255, 0.05); border: 1px dashed var(--neon-blue); border-radius: 8px; text-align: center; }
-        .btn { background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 8px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top:10px; }
+        * { box-sizing: border-box; font-family: 'Rajdhani', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; padding: 0; background: #050505; color: white; background: radial-gradient(circle at top left, #120024 0%, #050505 100%); min-height: 100vh; }
+        
+        /* Navigation */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--neon-purple); position: sticky; top: 0; z-index: 1000; }
+        .brand { font-size: 1.3rem; font-weight: 800; color: white; text-shadow: 0 0 10px var(--neon-purple); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .nav-links a { margin-left: 12px; color: #aaa; text-decoration: none; font-size: 0.85rem; font-weight: bold; }
+
+        /* Ads Area */
+        .ads-container { width: 100%; margin: 15px 0; padding: 10px; background: rgba(0, 243, 255, 0.05); border: 1px dashed var(--neon-blue); border-radius: 8px; text-align: center; }
+        
+        /* Grid & Cards */
+        .container { padding: 15px; max-width: 1200px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-bottom: 60px; }
+        .card { background: var(--glass); border: 1px solid rgba(0, 243, 255, 0.2); border-radius: 12px; padding: 10px; text-align: center; backdrop-filter: blur(10px); }
+        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 8px; margin-bottom: 8px; }
+        .card h3 { font-size: 0.85rem; margin: 5px 0; color: #ddd; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Buttons */
+        .btn { background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 10px; cursor: pointer; text-transform: uppercase; font-weight: bold; width: 100%; font-size: 0.8rem; border-radius: 6px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .btn:active { background: var(--neon-blue); color: black; transform: scale(0.95); }
     </style>
 </head>
 <body>
+
     <nav>
-        <div style="font-weight: 800; color: var(--neon-blue); letter-spacing: 2px;">NEXUS VAULT</div>
-        <div onclick="location.href='index.html'"><i class='bx bx-home-alt' style="font-size: 1.5rem;"></i></div>
+        <div class="brand" onclick="location.href='index.html'"><i class='bx bxs-component'></i> NEXUS</div>
+        <div class="nav-links">
+            <a href="logo.html" style="color:var(--neon-blue);">LOGOS</a>
+            <a href="qr.html">QR</a>
+            <a href="sticker.html">STICKERS</a>
+        </div>
     </nav>
 
-    <div class="container" id="ad-zone" style="display:none; padding: 0 20px;">
-        <div class="ads-container">
-            <small style="color:var(--neon-blue); display:block; margin-bottom:5px;">SPONSORED</small>
-            <div id="ad-injector"></div>
+    <div class="container">
+        <div id="ad-zone" style="display:none;">
+            <div class="ads-container">
+                <small style="color:var(--neon-blue); font-weight:bold; letter-spacing:2px;">SPONSORED UPLINK</small>
+                <div id="ad-injector"></div>
+            </div>
         </div>
+
+        <h2 style="border-left:4px solid var(--neon-purple); padding-left:15px; color:white; font-size:1.2rem; letter-spacing:1px; margin: 20px 0;">VAULT ASSETS</h2>
+        
+        <div class="grid" id="logo-grid">
+            </div>
     </div>
 
-    <div class="grid" id="main-grid"></div>
-
     <script>
+        // MASTER ASSET LIST (All 17 Logos)
         const logos = [
-            { name: 'Prime', price: 15, img: 'https://i.ibb.co/99vKNnF0/IMG-20260103-144325.png' },
-            { name: 'Core', price: 20, img: 'https://i.ibb.co/LzXn9xbV/IMG-20260103-15154031.jpg' }
-            // ... (Add all your 17 links here)
+            { id: 1, name: "Nexus Prime", price: 15, img: "https://i.ibb.co/99vKNnF0/IMG-20260103-144325.png" },
+            { id: 2, name: "Cyber Core", price: 20, img: "https://i.ibb.co/LzXn9xbV/IMG-20260103-15154031.jpg" },
+            { id: 3, name: "Neon Strike", price: 25, img: "https://i.ibb.co/2YyvNtjF/IMG-20260103-15154901.jpg" },
+            { id: 4, name: "Nexus V1", price: 15, img: "https://i.ibb.co/C3NyWDfm/logo1.png" },
+            { id: 5, name: "Nexus V2", price: 20, img: "https://i.ibb.co/yFZQVcNs/logo2.png" },
+            { id: 6, name: "Nexus V3", price: 25, img: "https://i.ibb.co/N47XRs1/logo3.png" },
+            { id: 7, name: "Nexus V4", price: 15, img: "https://i.ibb.co/pjGrjFdQ/logo4.png" },
+            { id: 8, name: "Nexus V5", price: 20, img: "https://i.ibb.co/C3hThR12/logo5.png" },
+            { id: 9, name: "Nexus V6", price: 25, img: "https://i.ibb.co/8D5DFG3x/logo6.png" },
+            { id: 10, name: "Nexus V10", price: 15, img: "https://i.ibb.co/fdWDk921/logo10.jpg" },
+            { id: 11, name: "Dark Matter", price: 20, img: "https://i.ibb.co/PZ2dKPvB/IMG-20260103-144255.png" },
+            { id: 12, name: "Holo Badge", price: 25, img: "https://i.ibb.co/xS6D26TZ/48-B446-F.png" },
+            { id: 13, name: "Quantum Ring", price: 15, img: "https://i.ibb.co/1fybcBDJ/IMG-20260103-15154630.jpg" },
+            { id: 14, name: "Eclipse Icon", price: 20, img: "https://i.ibb.co/DHXKNkNx/20260125-214026.jpg" },
+            { id: 15, name: "Pulse Crest", price: 25, img: "https://i.ibb.co/whWMQsCs/20260207-123512.png" },
+            { id: 16, name: "Aura Mark", price: 15, img: "https://i.ibb.co/ycVz9cCy/IMG-20260224-22471294.jpg" },
+            { id: 17, name: "Vanguard Sigil", price: 20, img: "https://i.ibb.co/Gf94t4B8/IMG-20260224-22472028.jpg" }
         ];
 
-        document.getElementById('main-grid').innerHTML = logos.map(l => `
+        // Render Logos
+        document.getElementById('logo-grid').innerHTML = logos.map(l => `
             <div class="card">
-                <img src="${l.img}">
-                <div style="font-weight:bold; margin:5px 0;">${l.name}</div>
-                <div style="color:var(--neon-purple);">₹${l.price}</div>
-                <button class="btn" onclick="buy('${l.name}', ${l.price}, '${l.img}')"><i class='bx bx-cart-add'></i> BUY</button>
+                <img src="${l.img}" loading="lazy">
+                <h3>${l.name}</h3>
+                <p style="color:var(--neon-purple); font-weight:bold; margin-bottom:10px;">₹${l.price}</p>
+                <button class="btn" onclick="buyItem('${l.name}', ${l.price}, '${l.img}')">
+                    <i class='bx bx-cart-add'></i> ACQUIRE
+                </button>
             </div>
         `).join('');
 
-        function buy(n,p,i) { localStorage.setItem('nexus_cart', JSON.stringify({name:n,price:p,img:i})); location.href='payment.html'; }
+        // Checkout Logic
+        function buyItem(name, price, img) {
+            if(!localStorage.getItem('nexus_user')) {
+                alert("ACCESS DENIED: PLEASE LOGIN FIRST");
+                window.location.href="login.html";
+                return;
+            }
+            localStorage.setItem('nexus_cart', JSON.stringify({name, price, img}));
+            window.location.href = "payment.html";
+        }
 
-        // AD LOADING LOGIC
+        // Ad Loading Logic
         window.onload = () => {
-            const script = localStorage.getItem('nexus_ad_script');
-            if(script) {
+            const adScript = localStorage.getItem('nexus_ad_script');
+            if(adScript) {
                 document.getElementById('ad-zone').style.display = 'block';
-                document.getElementById('ad-injector').innerHTML = script;
+                document.getElementById('ad-injector').innerHTML = adScript;
                 const scripts = document.getElementById('ad-injector').getElementsByTagName('script');
                 for (let i = 0; i < scripts.length; i++) { eval(scripts[i].innerText); }
             }
